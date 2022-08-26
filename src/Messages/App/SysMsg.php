@@ -17,7 +17,7 @@ class SysMsg extends AbstractMessage
     /**
      * 系统消息.
      *
-     * @param \YouduSdk\Youdu\Messages\App\Items\SysMsg $sysMsg 消息内容，支持表情，最长不超过600个字符，超出部分将自动截取
+     * @param Items\SysMsg $sysMsg 消息内容，支持表情，最长不超过600个字符，超出部分将自动截取
      */
     public function __construct(protected Items\SysMsg $sysMsg)
     {

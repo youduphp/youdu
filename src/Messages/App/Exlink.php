@@ -15,7 +15,7 @@ class Exlink extends AbstractMessage
     /**
      * 外链消息.
      *
-     * @param \YouduSdk\Youdu\Messages\App\Items\Exlink $exlink 消息内容，支持表情，最长不超过600个字符，超出部分将自动截取
+     * @param Items\Exlink $exlink 消息内容，支持表情，最长不超过600个字符，超出部分将自动截取
      */
     public function __construct(protected Items\Exlink $exlink)
     {

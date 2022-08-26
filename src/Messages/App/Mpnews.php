@@ -15,7 +15,7 @@ class Mpnews extends AbstractMessage
     /**
      * 图文消息.
      *
-     * @param \YouduSdk\Youdu\Messages\App\Items\Mpnews $mpnews 消息内容，支持表情，最长不超过600个字符，超出部分将自动截取
+     * @param Items\Mpnews $mpnews 消息内容，支持表情，最长不超过600个字符，超出部分将自动截取
      */
     public function __construct(protected Items\Mpnews $mpnews)
     {
