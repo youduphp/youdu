@@ -24,7 +24,7 @@ class Prpcrypt
 
     protected PKCS7Encoder $encoder;
 
-    public function __construct($key = '')
+    public function __construct(string $key = '')
     {
         $this->key = base64_decode($key);
         $this->encoder = new PKCS7Encoder();
@@ -35,7 +35,7 @@ class Prpcrypt
      *
      * @param string $text 需要加密的明文
      */
-    public function encrypt(string $text = '', string $appId = ''): array
+    public function encrypt(string $text, string $appId): array
     {
         try {
             // 获得16位随机字符串，填充到明文之前
@@ -56,10 +56,9 @@ class Prpcrypt
      * 对密文进行解密.
      *
      * @param string $encrypted 需要解密的密文
-     * @param mixed $appId
      * @return array<int,string>
      */
-    public function decrypt(string $encrypted, $appId): array
+    public function decrypt(string $encrypted, string $appId): array
     {
         try {
             // 使用BASE64对需要解密的字符串进行解码
@@ -98,7 +97,7 @@ class Prpcrypt
     /**
      * 随机生成16位字符串.
      */
-    public function getRandomStr(): string
+    protected function getRandomStr(): string
     {
         $str = '';
         $strPol = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
