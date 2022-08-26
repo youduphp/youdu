@@ -35,8 +35,8 @@ class App
     {
         $this->dept = new Dept($this);
         $this->group = new Group($this);
-        $this->session = new Session($this);
         $this->media = new Media($this);
+        $this->session = new Session($this);
         $this->user = new User($this);
     }
 
