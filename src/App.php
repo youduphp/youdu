@@ -80,43 +80,11 @@ class App
     }
 
     /**
-     * 加密.
-     */
-    public function encryptMsg(string $unencrypted = ''): string
-    {
-        [$errcode, $encrypted] = $this->crypter->encrypt($unencrypted, $this->config->getAppId());
-
-        if ($errcode != 0) {
-            throw new Exception($encrypted, $errcode);
-        }
-
-        return $encrypted;
-    }
-
-    /**
-     * 解密.
-     */
-    public function decryptMsg(?string $encrypted): string
-    {
-        if (strlen($this->config->getAesKey()) != 44) {
-            throw new Exception('Illegal aesKey', ErrorCode::$IllegalAesKey);
-        }
-
-        [$errcode, $decrypted] = $this->crypter->decrypt($encrypted, $this->config->getAppId());
-
-        if ($errcode != 0) {
-            throw new Exception('Decrypt failed:' . $decrypted, (int) $errcode);
-        }
-
-        return $decrypted;
-    }
-
-    /**
      * Get access token.
      */
     public function getAccessToken(): string
     {
-        $encrypted = $this->encryptMsg((string) time());
+        $encrypted = $this->config->encryptMsg((string) time());
 
         $parameters = [
             'buin' => $this->config->getBuin(),
@@ -132,7 +100,7 @@ class App
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
-        $decrypted = $this->decryptMsg($body['encrypt']);
+        $decrypted = $this->config->decryptMsg($body['encrypt']);
         $decoded = json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
 
         return $decoded['accessToken'];
@@ -163,7 +131,7 @@ class App
      */
     public function send(AbstractMessage $message): bool
     {
-        $encrypted = $this->encryptMsg($message->toJson());
+        $encrypted = $this->config->encryptMsg($message->toJson());
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
@@ -245,7 +213,7 @@ class App
     {
         $parameters = [
             'app_id' => $this->config->getAppId(),
-            'msg_encrypt' => $this->encryptMsg(json_encode([
+            'msg_encrypt' => $this->config->encryptMsg(json_encode([
                 'account' => $account,
                 'tip' => $tip,
                 'count' => $msgCount,
@@ -282,7 +250,7 @@ class App
 
         $parameters = [
             'app_id' => $this->config->getAppId(),
-            'msg_encrypt' => $this->encryptMsg($message->toJson()),
+            'msg_encrypt' => $this->config->encryptMsg($message->toJson()),
         ];
 
         $resp = $this->client->post($this->url('/cgi/popwindow'), $parameters);
