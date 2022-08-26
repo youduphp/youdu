@@ -36,11 +36,11 @@ class App
             $config->setClient($client);
         }
 
-        $this->dept = new Dept($this);
-        $this->group = new Group($this);
-        $this->media = new Media($this);
-        $this->session = new Session($this);
-        $this->user = new User($this);
+        $this->dept = new Dept($config);
+        $this->group = new Group($config);
+        $this->media = new Media($config);
+        $this->session = new Session($config);
+        $this->user = new User($config);
     }
 
     public function dept(): Dept
@@ -66,16 +66,6 @@ class App
     public function user(): User
     {
         return $this->user;
-    }
-
-    public function config(): Config
-    {
-        return $this->config;
-    }
-
-    public function client(): ClientInterface
-    {
-        return $this->client;
     }
 
     /**

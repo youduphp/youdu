@@ -18,12 +18,9 @@ class User
 {
     protected ClientInterface $client;
 
-    protected Config $config;
-
-    public function __construct(protected App $app)
+    public function __construct(protected Config $config)
     {
-        $this->client = $app->client();
-        $this->config = $app->config();
+        $this->client = $config->getClient();
     }
 
     /**
