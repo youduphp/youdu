@@ -21,12 +21,12 @@ class MessagePacker implements PackerInterface
 
     public function __construct(protected Config $config)
     {
-        $this->crypter = new Prpcrypt($config->getAppId(), $config->getAesKey());
+        $this->crypter = new Prpcrypt($config->getAesKey());
     }
 
     public function pack(string $string): string
     {
-        [$errcode, $encrypted] = $this->crypter->encrypt($string);
+        [$errcode, $encrypted] = $this->crypter->encrypt($string, $this->config->getAppId());
 
         if ($errcode != 0) {
             throw new Exception($encrypted, (int) $errcode);
@@ -41,7 +41,7 @@ class MessagePacker implements PackerInterface
             throw new Exception('Illegal aesKey', ErrorCode::$IllegalAesKey);
         }
 
-        [$errcode, $decrypted] = $this->crypter->decrypt($string);
+        [$errcode, $decrypted] = $this->crypter->decrypt($string, $this->config->getAppId());
 
         if ($errcode != 0) {
             throw new Exception('Decrypt failed:' . $decrypted, (int) $errcode);

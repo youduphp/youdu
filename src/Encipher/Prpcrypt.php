@@ -12,7 +12,6 @@ namespace YouduSdk\Youdu\Encipher;
 
 use Throwable;
 use YouduSdk\Youdu\Exception\ErrorCode;
-use YouduSdk\Youdu\Exception\Exception;
 
 /**
  * Prpcrypt class.
@@ -25,7 +24,7 @@ class Prpcrypt
 
     protected PKCS7Encoder $encoder;
 
-    public function __construct(protected string $appId, protected string $aesKey = '')
+    public function __construct(string $aesKey = '')
     {
         $this->key = base64_decode($aesKey);
         $this->encoder = new PKCS7Encoder();
@@ -37,12 +36,12 @@ class Prpcrypt
      * @param string $text 需要加密的明文
      * @return array<int, string>
      */
-    public function encrypt(string $text): array
+    public function encrypt(string $text, string $appId): array
     {
         try {
             // 获得16位随机字符串，填充到明文之前
             $random = $this->getRandomStr();
-            $text = $random . pack('N', strlen($text)) . $text . $this->appId;
+            $text = $random . pack('N', strlen($text)) . $text . $appId;
             $iv = substr($this->key, 0, 16);
             $text = $this->encoder->encode($text);
             $encrypted = openssl_encrypt($text, 'AES-256-CBC', $this->key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $iv);
@@ -60,7 +59,7 @@ class Prpcrypt
      * @param string $encrypted 需要解密的密文
      * @return array<int,string>
      */
-    public function decrypt(string $encrypted): array
+    public function decrypt(string $encrypted, string $appId): array
     {
         try {
             // 使用BASE64对需要解密的字符串进行解码
@@ -89,43 +88,11 @@ class Prpcrypt
             return [ErrorCode::$IllegalBuffer, 'Illegal Buffer'];
         }
 
-        if ($fromAppId != 'sysOrgAssistant' && $fromAppId != $this->appId) {
+        if ($fromAppId != 'sysOrgAssistant' && $fromAppId != $appId) {
             return [ErrorCode::$ValidateAppIdError, 'Validate AppId Error'];
         }
 
         return [0, $jsonContent];
-    }
-
-    /**
-     * 加密.
-     */
-    public function encryptMsg(string $unencrypted = ''): string
-    {
-        [$errcode, $encrypted] = $this->encrypt($unencrypted);
-
-        if ($errcode != 0) {
-            throw new Exception($encrypted, (int) $errcode);
-        }
-
-        return $encrypted;
-    }
-
-    /**
-     * 解密.
-     */
-    public function decryptMsg(?string $encrypted): string
-    {
-        if (strlen($this->aesKey) != 44) {
-            throw new Exception('Illegal aesKey', ErrorCode::$IllegalAesKey);
-        }
-
-        [$errcode, $decrypted] = $this->decrypt($encrypted);
-
-        if ($errcode != 0) {
-            throw new Exception('Decrypt failed:' . $decrypted, (int) $errcode);
-        }
-
-        return $decrypted;
     }
 
     /**
