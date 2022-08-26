@@ -35,7 +35,7 @@ class Curl implements ClientInterface
      * GET.
      *
      * @param mixed $query
-     * @throws \YouduSdk\Youdu\Exceptions\Http\RequestException
+     * @throws RequestException
      */
     public function get(string $uri = '', $query = null): array
     {
@@ -81,7 +81,7 @@ class Curl implements ClientInterface
      * POST.
      *
      * @param mixed $formParams
-     * @throws \YouduSdk\Youdu\Exceptions\Http\RequestException
+     * @throws RequestException
      */
     public function post(string $uri, $formParams = null): array
     {
@@ -129,7 +129,7 @@ class Curl implements ClientInterface
      * Upload.
      *
      * @param mixed $formParams
-     * @throws \YouduSdk\Youdu\Exceptions\Http\RequestException
+     * @throws RequestException
      */
     public function upload(string $uri, $formParams = null): array
     {
