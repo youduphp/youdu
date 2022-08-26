@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu\Messages\Session;
 
-class Video extends Message
+class Video extends AbstractMessage
 {
     /**
      *  视频消息.

@@ -12,9 +12,9 @@ namespace YouduSdk\Youdu\Messages\App;
 
 abstract class AbstractMessage implements MessageInterface
 {
-    protected $toUser;
+    protected ?string $toUser = null;
 
-    protected $toDept;
+    protected ?string $toDept = null;
 
     /**
      * 发送至用户.

@@ -14,7 +14,7 @@ use YouduSdk\Youdu\Exceptions\AccessTokenDoesNotExistException;
 use YouduSdk\Youdu\Exceptions\ErrorCode;
 use YouduSdk\Youdu\Exceptions\Exception;
 use YouduSdk\Youdu\Http\ClientInterface;
-use YouduSdk\Youdu\Messages\Session\Message;
+use YouduSdk\Youdu\Messages\Session\MessageInterface;
 use YouduSdk\Youdu\Messages\Session\Text;
 
 class Session
@@ -138,7 +138,7 @@ class Session
      * @throws Exception
      * @throws AccessTokenDoesNotExistException
      */
-    public function send(Message $message): bool
+    public function send(MessageInterface $message): bool
     {
         $parameters = [
             'buin' => $this->config->getBuin(),

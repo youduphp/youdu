@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu\Messages\App\Items;
 
-class Exlink extends Item
+class Exlink extends AbstractItem
 {
     public function __construct(array $items = [])
     {

@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu\Messages\App\Items;
 
-class Item implements MessageItemInterface
+class AbstractItem implements ItemInterface
 {
     protected array $items = [];
 

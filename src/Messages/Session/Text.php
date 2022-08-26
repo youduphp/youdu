@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu\Messages\Session;
 
-class Text extends Message
+class Text extends AbstractMessage
 {
     /**
      * 文本消息.

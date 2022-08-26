@@ -15,7 +15,7 @@ use YouduSdk\Youdu\Exceptions\AccessTokenDoesNotExistException;
 use YouduSdk\Youdu\Exceptions\ErrorCode;
 use YouduSdk\Youdu\Exceptions\Exception;
 use YouduSdk\Youdu\Http\ClientInterface;
-use YouduSdk\Youdu\Messages\App\AbstractMessage;
+use YouduSdk\Youdu\Messages\App\MessageInterface;
 use YouduSdk\Youdu\Messages\App\PopWindow;
 use YouduSdk\Youdu\Messages\App\SysMsg;
 use YouduSdk\Youdu\Messages\App\Text;
@@ -129,7 +129,7 @@ class App
     /**
      * 发送应用消息.
      */
-    public function send(AbstractMessage $message): bool
+    public function send(MessageInterface $message): bool
     {
         $encrypted = $this->config->encryptMsg($message->toJson());
         $parameters = [
@@ -159,7 +159,7 @@ class App
      *
      * @param string $toUser 接收成员的帐号列表。多个接收者用竖线分隔，最多支持1000个
      */
-    public function sendToUser(string $toUser = '', AbstractMessage|string $message = ''): bool
+    public function sendToUser(string $toUser = '', MessageInterface|string $message = ''): bool
     {
         if (is_string($message)) {
             $message = new Text($message);
@@ -175,7 +175,7 @@ class App
      *
      * @param string $toDept $toDept 接收部门id列表。多个接收者用竖线分隔，最多支持100个
      */
-    public function sendToDept(string $toDept = '', AbstractMessage|string $message = ''): bool
+    public function sendToDept(string $toDept = '', MessageInterface|string $message = ''): bool
     {
         if (is_string($message)) {
             $message = new Text($message);

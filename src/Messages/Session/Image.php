@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu\Messages\Session;
 
-class Image extends Message
+class Image extends AbstractMessage
 {
     /**
      * 图片消息.

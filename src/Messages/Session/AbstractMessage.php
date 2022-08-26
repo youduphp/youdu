@@ -10,13 +10,13 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu\Messages\Session;
 
-abstract class Message implements MessageInterface
+abstract class AbstractMessage implements MessageInterface
 {
-    protected $sender;
+    protected ?string $sender = null;
 
-    protected $receiver;
+    protected ?string $receiver = null;
 
-    protected $sessionId;
+    protected ?string $sessionId = null;
 
     public function sender(string $sender)
     {

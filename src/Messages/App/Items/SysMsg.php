@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu\Messages\App\Items;
 
-class SysMsg extends Item
+class SysMsg extends AbstractItem
 {
     /**
      * @param string $title 系统消息标题。最多允许64个字节

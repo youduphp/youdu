@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu\Messages\App\Items;
 
-interface MessageItemInterface
+interface ItemInterface
 {
     public function toArray(): array;
 

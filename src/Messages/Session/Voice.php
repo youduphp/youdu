@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu\Messages\Session;
 
-class Voice extends Message
+class Voice extends AbstractMessage
 {
     /**
      * 语音消息.

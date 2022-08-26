@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu\Messages\App\Items;
 
-class Mpnews extends Item
+class Mpnews extends AbstractItem
 {
     public function __construct(array $items = [])
     {
@@ -18,7 +18,7 @@ class Mpnews extends Item
     }
 
     /**
-     * @param string $itle 标题，最长不超过64个字符，超出部分将自动截取
+     * @param string $title 标题，最长不超过64个字符，超出部分将自动截取
      * @param string $media_id 封面图片ID。通过上传素材文件接口获取
      * @param string $content 正文，最长不超过600个字符，超出部分将自动截取
      * @param string $digest 摘要，最长不超过120个字符，超出部分将自动截取
