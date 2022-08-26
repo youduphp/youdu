@@ -52,8 +52,8 @@ class Media
 
         // 加密文件
         $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
-        $encryptedFile = $this->app->encryptMsg($originalContent);
-        $encryptedMsg = $this->app->encryptMsg(json_encode([
+        $encryptedFile = $this->config->encryptMsg($originalContent);
+        $encryptedMsg = $this->config->encryptMsg(json_encode([
             'type' => $fileType ?? 'file',
             'name' => basename($file),
         ], JSON_THROW_ON_ERROR));
@@ -82,7 +82,7 @@ class Media
             throw new Exception($resp['errmsg'], (int) $resp['errcode']);
         }
 
-        $decrypted = $this->app->decryptMsg($resp['encrypt']);
+        $decrypted = $this->config->decryptMsg($resp['encrypt']);
         $decoded = json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
 
         if (empty($decoded['mediaId'])) {
@@ -100,7 +100,7 @@ class Media
      */
     public function download(string $mediaId, string $savePath): bool
     {
-        $encrypted = $this->app->encryptMsg(json_encode(['mediaId' => $mediaId], JSON_THROW_ON_ERROR));
+        $encrypted = $this->config->encryptMsg(json_encode(['mediaId' => $mediaId], JSON_THROW_ON_ERROR));
 
         $parameters = [
             'buin' => $this->config->getBuin(),
@@ -111,9 +111,9 @@ class Media
         $url = $this->app->buildUrl('/cgi/media/get');
         $resp = $this->client->Post($url, $parameters);
         $header = $this->decodeHeader($resp['header']);
-        $fileInfo = $this->app->decryptMsg($header['Encrypt']);
+        $fileInfo = $this->config->decryptMsg($header['Encrypt']);
         $fileInfo = json_decode($fileInfo, true, 512, JSON_THROW_ON_ERROR);
-        $fileContent = $this->app->decryptMsg($resp['body']);
+        $fileContent = $this->config->decryptMsg($resp['body']);
 
         $saveAs = rtrim($savePath, '/') . '/' . $fileInfo['name'];
         $saved = file_put_contents($saveAs, $fileContent);
@@ -130,7 +130,7 @@ class Media
      */
     public function info(string $mediaId = ''): bool
     {
-        $encrypted = $this->app->encryptMsg(json_encode(['mediaId' => $mediaId], JSON_THROW_ON_ERROR));
+        $encrypted = $this->config->encryptMsg(json_encode(['mediaId' => $mediaId], JSON_THROW_ON_ERROR));
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
@@ -156,7 +156,7 @@ class Media
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->app->decryptMsg($decoded['encrypt'] ?? '');
+        $decrypted = $this->config->decryptMsg($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
     }

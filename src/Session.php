@@ -42,7 +42,7 @@ class Session
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->app->encryptMsg(json_encode([
+            'encrypt' => $this->config->encryptMsg(json_encode([
                 'title' => $title,
                 'creator' => $creator,
                 'type' => $type,
@@ -68,7 +68,7 @@ class Session
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
-        $decrypted = $this->app->decryptMsg($body['encrypt']);
+        $decrypted = $this->config->decryptMsg($body['encrypt']);
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
     }
 
@@ -89,7 +89,7 @@ class Session
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->app->encryptMsg(json_encode([
+            'encrypt' => $this->config->encryptMsg(json_encode([
                 'sessionId' => $sessionId,
                 'title' => $title,
                 'opUser' => $opUser,
@@ -110,7 +110,7 @@ class Session
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
-        $decrypted = $this->app->decryptMsg($body['encrypt']);
+        $decrypted = $this->config->decryptMsg($body['encrypt']);
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
     }
@@ -127,7 +127,7 @@ class Session
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->app->decryptMsg($decoded['encrypt'] ?? '');
+        $decrypted = $this->config->decryptMsg($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR) ?? [];
     }
@@ -143,7 +143,7 @@ class Session
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->app->encryptMsg($message->toJson()),
+            'encrypt' => $this->config->encryptMsg($message->toJson()),
         ];
 
         $resp = $this->client->post($this->app->buildUrl('/cgi/session/send'), $parameters);
