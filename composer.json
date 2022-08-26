@@ -1,0 +1,49 @@
+{
+    "name": "youdusdk/youdu",
+    "description": "The php sdk for youdu.",
+    "type": "library",
+    "keywords": [
+        "laravel",
+        "youdu"
+    ],
+    "homepage": "https://github.com/youdusdk/youdu-php",
+    "license": "MIT",
+    "authors": [{
+        "name": "huangdijia",
+        "email": "huangdijia@gmail.com"
+    }],
+    "require": {
+        "php": ">=8.0",
+        "guzzlehttp/guzzle": "^6.4|^7.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "pestphp/pest": "^1.21",
+        "phpstan/phpstan": "^1.0"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
+        "psr-4": {
+            "YouduSdk\\Youdu\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "YouduSdk\\Youdu\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "cs-fix": "php-cs-fixer fix $1",
+        "analyse": "phpstan analyse --memory-limit 300M -l 0 -c phpstan.neon ./src"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
