@@ -10,15 +10,10 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu\Generator;
 
-use YouduSdk\Youdu\Config;
-
 class UrlGenerator
 {
-    protected AccessTokenGenerator $accessTokenGenerator;
-
-    public function __construct(Config $config)
+    public function __construct(protected AccessTokenGenerator $accessTokenGenerator)
     {
-        $this->accessTokenGenerator = $config->getAccessTokenGenerator();
     }
 
     public function generate(string $url, bool $appendToken = true): string

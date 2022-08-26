@@ -30,9 +30,9 @@ class App
 
     protected User $user;
 
-    public function __construct(protected Config $config, protected ClientInterface $client)
+    public function __construct(protected Config $config, protected ?ClientInterface $client = null)
     {
-        if (! $config->getClient()) {
+        if ($client && ! $config->getClient()) {
             $config->setClient($client);
         }
 

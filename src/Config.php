@@ -37,7 +37,7 @@ class Config
         ], $config);
         $this->packer = new MessagePacker($this);
         $this->accessTokenGenerator = new AccessTokenGenerator($this);
-        $this->urlGenerator = new UrlGenerator($this);
+        $this->urlGenerator = new UrlGenerator($this->accessTokenGenerator);
     }
 
     public function get(string $key = null, $default = null)

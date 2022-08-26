@@ -17,19 +17,5 @@
     "php-cs-fixer.formatHtml": true,
     "php-cs-fixer.documentFormattingProvider": true,
     "cSpell.words": [
-        "analyse",
-        "autoloader",
-        "buin",
-        "CONNECTTIMEOUT",
-        "crypter",
-        "CURLOPT",
-        "Exlink",
-        "HTTPHEADER",
-        "POSTFIELDS",
-        "Prpcrypt",
-        "RETURNTRANSFER",
-        "VERIFYPEER",
-        "youdu",
-        "youdusdk"
     ],
 }
