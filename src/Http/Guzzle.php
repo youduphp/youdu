@@ -10,22 +10,16 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu\Http;
 
+use Closure;
 use GuzzleHttp\Client;
 
 class Guzzle implements ClientInterface
 {
     protected Client $client;
 
-    protected array $options = [];
-
-    public function __construct(array $options = [])
+    public function __construct(Closure $clientFactory)
     {
-        $this->client = new Client($options);
-        $this->options = array_merge_recursive([
-            'headers' => [
-                'User-Agent' => 'Youdu/2.0',
-            ],
-        ], $options);
+        $this->client = $clientFactory();
     }
 
     /**
@@ -34,8 +28,7 @@ class Guzzle implements ClientInterface
      */
     public function get(string $uri, $query = null): array
     {
-        $uri .= (! str_contains($uri, '?') ? '?' : '&') . http_build_query($query);
-        $response = $this->client->request('GET', $uri, $this->options);
+        $response = $this->client->request('GET', $uri, ['query' => $query]);
 
         return [
             'header' => $response->getHeaders(),
