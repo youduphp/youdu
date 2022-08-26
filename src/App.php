@@ -24,92 +24,59 @@ class App
 {
     protected Prpcrypt $crypter;
 
-    protected ?Dept $dept = null;
+    protected Dept $dept;
 
-    protected ?Group $group = null;
+    protected Group $group;
 
-    protected ?User $user = null;
+    protected User $user;
 
-    protected ?Session $session = null;
+    protected Session $session;
 
-    protected ?Media $media = null;
+    protected Media $media;
 
-    public function __construct(protected ClientInterface $client, protected Config $config)
+    public function __construct(protected Config $config, protected ClientInterface $client)
     {
         $this->crypter = new Prpcrypt($config->getAesKey());
+        $this->dept = new Dept($this);
+        $this->group = new Group($this);
+        $this->session = new Session($this);
+        $this->media = new Media($this);
+        $this->user = new User($this);
     }
 
-    public function setDept(Dept $dept)
-    {
-        $this->dept = $dept;
-    }
-
-    /**
-     * 部门.
-     */
-    public function getDept(): Dept
+    public function dept(): Dept
     {
         return $this->dept;
     }
 
-    public function setGroup(Group $group)
-    {
-        $this->group = $group;
-    }
-
-    /**
-     * 群.
-     */
-    public function getGroup(): Group
+    public function group(): Group
     {
         return $this->group;
     }
 
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * 用户.
-     */
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    public function setSession(Session $session)
-    {
-        $this->session = $session;
-    }
-
-    /**
-     * 会话.
-     */
-    public function getSession(): Session
-    {
-        return $this->session;
-    }
-
-    public function setMedia(Media $media)
-    {
-        $this->media = $media;
-    }
-
-    /**
-     * 会话.
-     */
-    public function getMedia(): Media
+    public function media(): Media
     {
         return $this->media;
     }
 
-    /**
-     * 获取 config.
-     */
-    public function getConfig(): Config
+    public function session(): Session
+    {
+        return $this->session;
+    }
+
+    public function user(): User
+    {
+        return $this->user;
+    }
+
+    public function config(): Config
     {
         return $this->config;
+    }
+
+    public function client(): ClientInterface
+    {
+        return $this->client;
     }
 
     /**

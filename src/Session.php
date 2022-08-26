@@ -19,8 +19,14 @@ use YouduSdk\Youdu\Messages\Session\Text;
 
 class Session
 {
-    public function __construct(protected ClientInterface $client, protected App $app, protected Config $config)
+    protected ClientInterface $client;
+
+    protected Config $config;
+
+    public function __construct(protected App $app)
     {
+        $this->client = $app->client();
+        $this->config = $app->config();
     }
 
     /**

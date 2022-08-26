@@ -12,8 +12,23 @@ namespace YouduSdk\Youdu;
 
 class Config
 {
-    public function __construct(protected string $api = '', protected int $buin = 0, protected string $appId = '', protected string $aesKey = '')
+    protected string $api = '';
+
+    protected int $buin = 0;
+
+    protected string $appId = '';
+
+    protected string $aesKey = '';
+
+    protected string $tmpPath = '/tmp';
+
+    public function __construct(array $config)
     {
+        $this->api = $config['api'] ?? '';
+        $this->buin = $config['buin'] ?? '';
+        $this->appId = $config['appId'] ?? '';
+        $this->aesKey = $config['aes_key'] ?? '';
+        $this->tmpPath = $config['tmp_path'] ?? '';
     }
 
     public function getApi(): string
@@ -34,5 +49,10 @@ class Config
     public function getAesKey(): string
     {
         return $this->aesKey;
+    }
+
+    public function getTmpPath(): string
+    {
+        return $this->tmpPath;
     }
 }

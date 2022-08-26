@@ -12,8 +12,6 @@ namespace YouduSdk\Youdu\Http;
 
 interface ClientInterface
 {
-    public function __construct(string $baseUri = '', int $timeout = 2);
-
     public function get(string $uri, $query = null): array;
 
     public function post(string $uri, $formParams = null): array;

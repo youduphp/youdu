@@ -16,8 +16,14 @@ use YouduSdk\Youdu\Http\ClientInterface;
 
 class User
 {
-    public function __construct(protected ClientInterface $client, protected App $app, protected Config $config, protected string $tmpPath = '/tmp')
+    protected ClientInterface $client;
+
+    protected Config $config;
+
+    public function __construct(protected App $app)
     {
+        $this->client = $app->client();
+        $this->config = $app->config();
     }
 
     /**
@@ -284,7 +290,7 @@ class User
         }
 
         // 加密文件
-        $tmpFile = $this->tmpPath . '/' . uniqid('youdu_');
+        $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
         $encryptedFile = $this->app->encryptMsg($originalContent);
         $encryptedMsg = $this->app->encryptMsg(json_encode([
             'type' => 'image',
