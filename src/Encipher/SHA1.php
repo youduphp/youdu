@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @document https://github.com/youdusdk/youdu-php/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduSdk\Youdu\Crypt;
+namespace YouduSdk\Youdu\Encipher;
 
 use Throwable;
 use YouduSdk\Youdu\Exceptions\ErrorCode;

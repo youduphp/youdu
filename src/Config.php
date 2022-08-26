@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu;
 
-use YouduSdk\Youdu\Crypt\Prpcrypt;
+use YouduSdk\Youdu\Encipher\Prpcrypt;
 
 class Config
 {
