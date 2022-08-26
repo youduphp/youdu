@@ -21,13 +21,13 @@ class SHA1
      * @param string $timestamp 时间戳
      * @param string $nonce 随机字符串
      * @param string $encrypt 密文消息
-     * @param mixed $encrypt_msg
+     * @param mixed $encryptMsg
      */
-    public function getSHA1($token, $timestamp, $nonce, $encrypt_msg)
+    public function getSHA1($token, $timestamp, $nonce, $encryptMsg)
     {
         // 排序
         try {
-            $array = [$encrypt_msg, $token, $timestamp, $nonce];
+            $array = [$encryptMsg, $token, $timestamp, $nonce];
             sort($array, SORT_STRING);
             $str = implode($array);
 
