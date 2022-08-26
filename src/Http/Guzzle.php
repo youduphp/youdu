@@ -11,11 +11,11 @@ declare(strict_types=1);
 namespace YouduSdk\Youdu\Http;
 
 use Closure;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface as GuzzleClientInterface;
 
 class Guzzle implements ClientInterface
 {
-    protected Client $client;
+    protected GuzzleClientInterface $client;
 
     public function __construct(Closure $clientFactory)
     {
