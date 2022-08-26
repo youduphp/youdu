@@ -28,7 +28,7 @@ class Curl implements ClientInterface
     {
         $this->baseUri = trim($options['base_uri'], '/');
         $this->timeout = $options['timeout'] ?? 5;
-        $this->userAgent = $options['headers']['User-Agent'] ?? 'Youdu/2.0';
+        $this->userAgent = 'Youdu/2.0';
     }
 
     /**
