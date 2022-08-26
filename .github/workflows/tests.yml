@@ -43,5 +43,5 @@ jobs:
 
       - name: Test
         run: |
-          composer analyze
+          composer analyse
           composer test
