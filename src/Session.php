@@ -61,7 +61,7 @@ class Session
 
         $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($body['errcode'] !== 0) {
+        if ($body['errcode'] !== ErrorCode::$OK) {
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
@@ -103,7 +103,7 @@ class Session
 
         $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($body['errcode'] !== 0) {
+        if ($body['errcode'] !== ErrorCode::$OK) {
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
@@ -120,7 +120,7 @@ class Session
         $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/session/get'), ['sessionId' => $sessionId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($decoded['errcode'] !== 0) {
+        if ($decoded['errcode'] !== ErrorCode::$OK) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
@@ -151,7 +151,7 @@ class Session
 
         $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($body['errcode'] !== 0) {
+        if ($body['errcode'] !== ErrorCode::$OK) {
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 

@@ -89,7 +89,7 @@ class App
 
         $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($body['errcode'] !== 0) {
+        if ($body['errcode'] !== ErrorCode::$OK) {
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
@@ -170,7 +170,7 @@ class App
 
         $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($body['errcode'] !== 0) {
+        if ($body['errcode'] !== ErrorCode::$OK) {
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
@@ -203,7 +203,7 @@ class App
 
         $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($body['errcode'] !== 0) {
+        if ($body['errcode'] !== ErrorCode::$OK) {
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 

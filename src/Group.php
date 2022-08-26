@@ -38,7 +38,7 @@ class Group
         $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/group/list'), $parameters);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($decoded['errcode'] !== 0) {
+        if ($decoded['errcode'] !== ErrorCode::$OK) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
@@ -68,7 +68,7 @@ class Group
 
         $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($body['errcode'] !== 0) {
+        if ($body['errcode'] !== ErrorCode::$OK) {
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
@@ -86,7 +86,7 @@ class Group
         $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/group/delete'), ['groupId' => $groupId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($decoded['errcode'] !== 0) {
+        if ($decoded['errcode'] !== ErrorCode::$OK) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
@@ -115,7 +115,7 @@ class Group
 
         $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($body['errcode'] !== 0) {
+        if ($body['errcode'] !== ErrorCode::$OK) {
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
@@ -130,7 +130,7 @@ class Group
         $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/group/info'), ['id' => $groupId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($decoded['errcode'] !== 0) {
+        if ($decoded['errcode'] !== ErrorCode::$OK) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
@@ -161,7 +161,7 @@ class Group
 
         $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($body['errcode'] !== 0) {
+        if ($body['errcode'] !== ErrorCode::$OK) {
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
@@ -188,7 +188,7 @@ class Group
 
         $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($body['errcode'] !== 0) {
+        if ($body['errcode'] !== ErrorCode::$OK) {
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
@@ -204,7 +204,7 @@ class Group
         $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/group/ismember'), ['id' => $groupId, 'userId' => $userId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
-        if ($decoded['errcode'] !== 0) {
+        if ($decoded['errcode'] !== ErrorCode::$OK) {
             throw new Exception($decoded['errmsg'], 1);
         }
 

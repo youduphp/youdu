@@ -28,7 +28,7 @@ class MessagePacker implements PackerInterface
     {
         [$errcode, $encrypted] = $this->crypter->encrypt($string, $this->config->getAppId());
 
-        if ($errcode != 0) {
+        if ($errcode != ErrorCode::$OK) {
             throw new Exception($encrypted, (int) $errcode);
         }
 
@@ -43,7 +43,7 @@ class MessagePacker implements PackerInterface
 
         [$errcode, $decrypted] = $this->crypter->decrypt($string, $this->config->getAppId());
 
-        if ($errcode != 0) {
+        if ($errcode != ErrorCode::$OK) {
             throw new Exception('Decrypt failed:' . $decrypted, (int) $errcode);
         }
 
