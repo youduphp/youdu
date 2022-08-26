@@ -3,7 +3,7 @@
     "description": "The php sdk for youdu.",
     "type": "library",
     "keywords": [
-        "laravel",
+        "php",
         "youdu"
     ],
     "homepage": "https://github.com/youdusdk/youdu-php",
