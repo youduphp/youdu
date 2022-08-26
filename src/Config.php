@@ -10,6 +10,9 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu;
 
+use YouduSdk\Youdu\Generator\AccessTokenGenerator;
+use YouduSdk\Youdu\Generator\UrlGenerator;
+use YouduSdk\Youdu\Http\ClientInterface;
 use YouduSdk\Youdu\Packer\MessagePacker;
 use YouduSdk\Youdu\Packer\PackerInterface;
 
@@ -19,7 +22,11 @@ class Config
 
     protected PackerInterface $packer;
 
-    public function __construct(array $config = [])
+    protected AccessTokenGenerator $accessTokenGenerator;
+
+    protected UrlGenerator $urlGenerator;
+
+    public function __construct(array $config = [], protected ?ClientInterface $client = null)
     {
         $this->config = array_merge([
             'api' => '',
@@ -29,6 +36,8 @@ class Config
             'tmp_path' => '',
         ], $config);
         $this->packer = new MessagePacker($this);
+        $this->accessTokenGenerator = new AccessTokenGenerator($this);
+        $this->urlGenerator = new UrlGenerator($this);
     }
 
     public function get(string $key = null, $default = null)
@@ -68,5 +77,25 @@ class Config
     public function getPacker(): MessagePacker
     {
         return $this->packer;
+    }
+
+    public function setClient(ClientInterface $client)
+    {
+        $this->client = $client;
+    }
+
+    public function getClient(): ?ClientInterface
+    {
+        return $this->client;
+    }
+
+    public function getAccessTokenGenerator(): AccessTokenGenerator
+    {
+        return $this->accessAccessTokenGenerator;
+    }
+
+    public function getUrlGenerator(): UrlGenerator
+    {
+        return $this->urlGenerator;
     }
 }

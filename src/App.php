@@ -33,6 +33,10 @@ class App
 
     public function __construct(protected Config $config, protected ClientInterface $client)
     {
+        if (! $config->getClient()) {
+            $config->setClient($client);
+        }
+
         $this->dept = new Dept($this);
         $this->group = new Group($this);
         $this->media = new Media($this);
@@ -88,7 +92,7 @@ class App
             'encrypt' => $encrypted,
         ];
 
-        $url = $this->buildUrl('/cgi/gettoken', false);
+        $url = $this->config->getUrlGenerator()->generate('/cgi/gettoken', false);
         $resp = $this->client->post($url, $parameters);
         $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
@@ -134,7 +138,7 @@ class App
             'encrypt' => $encrypted,
         ];
 
-        $url = $this->buildUrl('/cgi/msg/send');
+        $url = $this->config->getUrlGenerator()->generate('/cgi/msg/send');
         $resp = $this->client->post($url, $parameters);
 
         if ($resp['httpCode'] != 200) {
@@ -216,7 +220,7 @@ class App
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->buildUrl('/cgi/set.ent.notice'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/set.ent.notice'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -249,7 +253,7 @@ class App
             'msg_encrypt' => $this->config->getPacker()->pack($message->toJson()),
         ];
 
-        $resp = $this->client->post($this->buildUrl('/cgi/popwindow'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/popwindow'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);

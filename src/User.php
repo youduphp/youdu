@@ -33,7 +33,7 @@ class User
      */
     public function simpleList(?int $deptId = 0)
     {
-        $resp = $this->client->get($this->app->buildUrl('/cgi/user/simplelist'), ['deptId' => $deptId]);
+        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/user/simplelist'), ['deptId' => $deptId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
@@ -50,7 +50,7 @@ class User
      */
     public function lists(?int $deptId = 0): array
     {
-        $resp = $this->client->get($this->app->buildUrl('/cgi/user/list'), ['deptId' => $deptId]);
+        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/user/list'), ['deptId' => $deptId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
@@ -87,7 +87,7 @@ class User
             'dept' => $dept,
         ], JSON_THROW_ON_ERROR));
 
-        $resp = $this->client->post($this->app->buildUrl('/cgi/user/create'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/user/create'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -127,7 +127,7 @@ class User
             'dept' => $dept,
         ], JSON_THROW_ON_ERROR));
 
-        $resp = $this->client->post($this->app->buildUrl('/cgi/user/update'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/user/update'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -163,7 +163,7 @@ class User
             'sortId' => $sortId,
         ], JSON_THROW_ON_ERROR));
 
-        $resp = $this->client->post($this->app->buildUrl('/cgi/user/positionupdate'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/user/positionupdate'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -191,7 +191,7 @@ class User
                 'delList' => $userId,
             ], JSON_THROW_ON_ERROR));
 
-            $resp = $this->client->post($this->app->buildUrl('/cgi/user/batchdelete'), $parameters);
+            $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/user/batchdelete'), $parameters);
 
             if ($resp['httpCode'] != 200) {
                 throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -207,7 +207,7 @@ class User
         }
 
         // single delete
-        $resp = $this->client->get($this->app->buildUrl('/cgi/user/delete'), ['userId' => $userId]);
+        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/user/delete'), ['userId' => $userId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
@@ -223,7 +223,7 @@ class User
      */
     public function get($userId): array
     {
-        $resp = $this->client->get($this->app->buildUrl('/cgi/user/get'), ['userId' => $userId]);
+        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/user/get'), ['userId' => $userId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
@@ -255,7 +255,7 @@ class User
             'passwd' => $passwd,
         ], JSON_THROW_ON_ERROR));
 
-        $resp = $this->client->post($this->app->buildUrl('/cgi/user/setauth'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/user/setauth'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -314,7 +314,7 @@ class User
             ];
 
             // 开始上传
-            $url = $this->app->buildUrl('/cgi/avatar/set');
+            $url = $this->config->getUrlGenerator()->generate('/cgi/avatar/set');
             $resp = $this->client->upload($url, $parameters);
 
             if ($resp['errcode'] !== 0) {
@@ -335,7 +335,7 @@ class User
      */
     public function getAvatar($userId, int $size = 0): string
     {
-        $resp = $this->client->get($this->app->buildUrl('/cgi/avatar/get'), ['userId' => $userId, 'size' => $size]);
+        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/avatar/get'), ['userId' => $userId, 'size' => $size]);
         return $this->config->getPacker()->unpack($resp['body'] ?? '');
     }
 
@@ -344,7 +344,7 @@ class User
      */
     public function identify(string $token): array
     {
-        $resp = $this->client->get($this->app->buildUrl('/cgi/identify?token=' . $token, false));
+        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/identify?token=' . $token, false));
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);

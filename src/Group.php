@@ -38,7 +38,7 @@ class Group
             $parameters['userId'] = $userId;
         }
 
-        $resp = $this->client->get($this->app->buildUrl('/cgi/group/list'), $parameters);
+        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/group/list'), $parameters);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
@@ -63,7 +63,7 @@ class Group
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->app->buildUrl('/cgi/group/create'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/group/create'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -86,7 +86,7 @@ class Group
      */
     public function delete(string $groupId): bool
     {
-        $resp = $this->client->get($this->app->buildUrl('/cgi/group/delete'), ['groupId' => $groupId]);
+        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/group/delete'), ['groupId' => $groupId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
@@ -110,7 +110,7 @@ class Group
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->app->buildUrl('/cgi/group/update'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/group/update'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -130,7 +130,7 @@ class Group
      */
     public function info(string $groupId): array
     {
-        $resp = $this->client->get($this->app->buildUrl('/cgi/group/info'), ['id' => $groupId]);
+        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/group/info'), ['id' => $groupId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
@@ -156,7 +156,7 @@ class Group
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->app->buildUrl('/cgi/group/addmember'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/group/addmember'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -183,7 +183,7 @@ class Group
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->app->buildUrl('/cgi/group/delmember'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/group/delmember'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -204,7 +204,7 @@ class Group
      */
     public function isMember(string $groupId, $userId): bool
     {
-        $resp = $this->client->get($this->app->buildUrl('/cgi/group/ismember'), ['id' => $groupId, 'userId' => $userId]);
+        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/group/ismember'), ['id' => $groupId, 'userId' => $userId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {

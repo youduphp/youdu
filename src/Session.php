@@ -56,7 +56,7 @@ class Session
 
         $member = array_map(fn ($item) => (string) $item, $member);
 
-        $resp = $this->client->post($this->app->buildUrl('/cgi/session/create'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/session/create'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -98,7 +98,7 @@ class Session
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->app->buildUrl('/cgi/session/update'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/session/update'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -120,7 +120,7 @@ class Session
      */
     public function info(string $sessionId): array
     {
-        $resp = $this->client->get($this->app->buildUrl('/cgi/session/get'), ['sessionId' => $sessionId]);
+        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/session/get'), ['sessionId' => $sessionId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
@@ -146,7 +146,7 @@ class Session
             'encrypt' => $this->config->getPacker()->pack($message->toJson()),
         ];
 
-        $resp = $this->client->post($this->app->buildUrl('/cgi/session/send'), $parameters);
+        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/session/send'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
