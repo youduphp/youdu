@@ -52,47 +52,49 @@ class Media
 
         // 加密文件
         $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
-        $encryptedFile = $this->config->getCrypter()->encryptMsg($originalContent);
-        $encryptedMsg = $this->config->getCrypter()->encryptMsg(json_encode([
-            'type' => $fileType ?? 'file',
-            'name' => basename($file),
-        ], JSON_THROW_ON_ERROR));
 
-        // 保存加密文件
-        if (file_put_contents($tmpFile, $encryptedFile) === false) {
-            throw new Exception('Create tmpfile failed', 1);
+        try {
+            $encryptedFile = $this->config->getCrypter()->encryptMsg($originalContent);
+            $encryptedMsg = $this->config->getCrypter()->encryptMsg(json_encode([
+                'type' => $fileType ?? 'file',
+                'name' => basename($file),
+            ], JSON_THROW_ON_ERROR));
+
+            // 保存加密文件
+            if (file_put_contents($tmpFile, $encryptedFile) === false) {
+                throw new Exception('Create tmpfile failed', 1);
+            }
+
+            // 封装上传参数
+            $parameters = [
+                'file' => $this->client->makeUploadFile(realpath($tmpFile)),
+                'encrypt' => $encryptedMsg,
+                'buin' => $this->config->getBuin(),
+                'appId' => $this->config->getAppId(),
+            ];
+
+            // 开始上传
+            $url = $this->app->buildUrl('/cgi/media/upload');
+            $resp = $this->client->upload($url, $parameters);
+
+            // 出错后删除加密文件
+            if ($resp['errcode'] !== 0) {
+                throw new Exception($resp['errmsg'], (int) $resp['errcode']);
+            }
+
+            $decrypted = $this->config->getCrypter()->decryptMsg($resp['encrypt']);
+            $decoded = json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
+
+            if (empty($decoded['mediaId'])) {
+                throw new Exception('mediaId is empty', 1);
+            }
+
+            return $decoded['mediaId'];
+        } finally {
+            if (is_file($tmpFile)) {
+                unlink($tmpFile);
+            }
         }
-
-        // 封装上传参数
-        $parameters = [
-            'file' => $this->client->makeUploadFile(realpath($tmpFile)),
-            'encrypt' => $encryptedMsg,
-            'buin' => $this->config->getBuin(),
-            'appId' => $this->config->getAppId(),
-        ];
-
-        // 开始上传
-        $url = $this->app->buildUrl('/cgi/media/upload');
-        $resp = $this->client->upload($url, $parameters);
-
-        // 出错后删除加密文件
-        if ($resp['errcode'] !== 0) {
-            unlink($tmpFile);
-
-            throw new Exception($resp['errmsg'], (int) $resp['errcode']);
-        }
-
-        $decrypted = $this->config->getCrypter()->decryptMsg($resp['encrypt']);
-        $decoded = json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
-
-        if (empty($decoded['mediaId'])) {
-            throw new Exception('mediaId is empty', 1);
-        }
-
-        // 删除加密文件
-        unlink($tmpFile);
-
-        return $decoded['mediaId'];
     }
 
     /**

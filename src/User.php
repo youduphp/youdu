@@ -291,37 +291,42 @@ class User
 
         // 加密文件
         $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
-        $encryptedFile = $this->config->getCrypter()->encryptMsg($originalContent);
-        $encryptedMsg = $this->config->getCrypter()->encryptMsg(json_encode([
-            'type' => 'image',
-            'name' => basename($file),
-        ], JSON_THROW_ON_ERROR));
 
-        // 保存加密文件
-        if (file_put_contents($tmpFile, $encryptedFile) === false) {
-            throw new Exception('Create tmpfile failed', 1);
+        try {
+            $encryptedFile = $this->config->getCrypter()->encryptMsg($originalContent);
+            $encryptedMsg = $this->config->getCrypter()->encryptMsg(json_encode([
+                'type' => 'image',
+                'name' => basename($file),
+            ], JSON_THROW_ON_ERROR));
+
+            // 保存加密文件
+            if (file_put_contents($tmpFile, $encryptedFile) === false) {
+                throw new Exception('Create tmpfile failed', 1);
+            }
+
+            // 封装上传参数
+            $parameters = [
+                'userId' => $userId,
+                'file' => $this->client->makeUploadFile(realpath($tmpFile)),
+                'encrypt' => $encryptedMsg,
+                'buin' => $this->config->getBuin(),
+                'appId' => $this->config->getAppId(),
+            ];
+
+            // 开始上传
+            $url = $this->app->buildUrl('/cgi/avatar/set');
+            $resp = $this->client->upload($url, $parameters);
+
+            if ($resp['errcode'] !== 0) {
+                return false;
+            }
+
+            return true;
+        } finally {
+            if (is_file($tmpFile)) {
+                unlink($tmpFile);
+            }
         }
-
-        // 封装上传参数
-        $parameters = [
-            'userId' => $userId,
-            'file' => $this->client->makeUploadFile(realpath($tmpFile)),
-            'encrypt' => $encryptedMsg,
-            'buin' => $this->config->getBuin(),
-            'appId' => $this->config->getAppId(),
-        ];
-
-        // 开始上传
-        $url = $this->app->buildUrl('/cgi/avatar/set');
-        $resp = $this->client->upload($url, $parameters);
-
-        if ($resp['errcode'] !== 0) {
-            unlink($tmpFile);
-
-            return false;
-        }
-
-        return true;
     }
 
     /**
