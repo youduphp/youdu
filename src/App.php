@@ -10,7 +10,6 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu;
 
-use YouduSdk\Youdu\Crypt\Prpcrypt;
 use YouduSdk\Youdu\Exceptions\AccessTokenDoesNotExistException;
 use YouduSdk\Youdu\Exceptions\ErrorCode;
 use YouduSdk\Youdu\Exceptions\Exception;
@@ -22,8 +21,6 @@ use YouduSdk\Youdu\Messages\App\Text;
 
 class App
 {
-    protected Prpcrypt $crypter;
-
     protected Dept $dept;
 
     protected Group $group;
@@ -36,7 +33,6 @@ class App
 
     public function __construct(protected Config $config, protected ClientInterface $client)
     {
-        $this->crypter = new Prpcrypt($config->getAesKey());
         $this->dept = new Dept($this);
         $this->group = new Group($this);
         $this->session = new Session($this);
