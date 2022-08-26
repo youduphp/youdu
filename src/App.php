@@ -10,7 +10,6 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu;
 
-use YouduSdk\Youdu\Exceptions\AccessTokenDoesNotExistException;
 use YouduSdk\Youdu\Exceptions\ErrorCode;
 use YouduSdk\Youdu\Exceptions\Exception;
 use YouduSdk\Youdu\Http\ClientInterface;
@@ -77,53 +76,6 @@ class App
     public function client(): ClientInterface
     {
         return $this->client;
-    }
-
-    /**
-     * Get access token.
-     */
-    public function getAccessToken(): string
-    {
-        $encrypted = $this->config->getPacker()->pack((string) time());
-
-        $parameters = [
-            'buin' => $this->config->getBuin(),
-            'appId' => $this->config->getAppId(),
-            'encrypt' => $encrypted,
-        ];
-
-        $url = $this->config->getUrlGenerator()->generate('/cgi/gettoken', false);
-        $resp = $this->client->post($url, $parameters);
-        $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
-
-        if ($body['errcode'] != 0) {
-            throw new Exception($body['errmsg'], $body['errcode']);
-        }
-
-        $decrypted = $this->config->getPacker()->unpack($body['encrypt']);
-        $decoded = json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
-
-        return $decoded['accessToken'];
-    }
-
-    /**
-     * 组装 URL.
-     */
-    public function buildUrl(string $uri = '', bool $withAccessToken = true): string
-    {
-        $uri = '/' . ltrim($uri, '/');
-
-        if ($withAccessToken) {
-            $token = $this->getAccessToken();
-
-            if (! $token) {
-                throw new AccessTokenDoesNotExistException('AccessToken does not exist', 1);
-            }
-
-            $uri .= "?accessToken={$token}";
-        }
-
-        return $uri;
     }
 
     /**

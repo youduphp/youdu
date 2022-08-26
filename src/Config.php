@@ -91,7 +91,7 @@ class Config
 
     public function getAccessTokenGenerator(): AccessTokenGenerator
     {
-        return $this->accessAccessTokenGenerator;
+        return $this->accessTokenGenerator;
     }
 
     public function getUrlGenerator(): UrlGenerator
