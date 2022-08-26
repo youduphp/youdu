@@ -31,7 +31,7 @@ class Dept
      */
     public function lists(int $parentDeptId = 0): array
     {
-        $resp = $this->client->get($this->app->url('/cgi/dept/list'), ['id' => $parentDeptId]);
+        $resp = $this->client->get($this->app->buildUrl('/cgi/dept/list'), ['id' => $parentDeptId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
@@ -66,7 +66,7 @@ class Dept
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->app->url('/cgi/dept/create'), $parameters);
+        $resp = $this->client->post($this->app->buildUrl('/cgi/dept/create'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -107,7 +107,7 @@ class Dept
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->app->url('/cgi/dept/update'), $parameters);
+        $resp = $this->client->post($this->app->buildUrl('/cgi/dept/update'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -129,7 +129,7 @@ class Dept
      */
     public function delete(int $deptId): bool
     {
-        $resp = $this->client->get($this->app->url('/cgi/dept/delete'), ['id' => $deptId]);
+        $resp = $this->client->get($this->app->buildUrl('/cgi/dept/delete'), ['id' => $deptId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
@@ -146,7 +146,7 @@ class Dept
      */
     public function getId(string $alias = ''): array
     {
-        $resp = $this->client->get($this->app->url('/cgi/dept/list'), ['alias' => $alias]);
+        $resp = $this->client->get($this->app->buildUrl('/cgi/dept/list'), ['alias' => $alias]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {

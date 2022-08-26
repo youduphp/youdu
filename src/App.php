@@ -92,7 +92,7 @@ class App
             'encrypt' => $encrypted,
         ];
 
-        $url = $this->url('/cgi/gettoken', false);
+        $url = $this->buildUrl('/cgi/gettoken', false);
         $resp = $this->client->post($url, $parameters);
         $body = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
@@ -109,7 +109,7 @@ class App
     /**
      * 组装 URL.
      */
-    public function url(string $uri = '', bool $withAccessToken = true): string
+    public function buildUrl(string $uri = '', bool $withAccessToken = true): string
     {
         $uri = '/' . ltrim($uri, '/');
 
@@ -138,7 +138,7 @@ class App
             'encrypt' => $encrypted,
         ];
 
-        $url = $this->url('/cgi/msg/send');
+        $url = $this->buildUrl('/cgi/msg/send');
         $resp = $this->client->post($url, $parameters);
 
         if ($resp['httpCode'] != 200) {
@@ -220,7 +220,7 @@ class App
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->url('/cgi/set.ent.notice'), $parameters);
+        $resp = $this->client->post($this->buildUrl('/cgi/set.ent.notice'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -253,7 +253,7 @@ class App
             'msg_encrypt' => $this->config->encryptMsg($message->toJson()),
         ];
 
-        $resp = $this->client->post($this->url('/cgi/popwindow'), $parameters);
+        $resp = $this->client->post($this->buildUrl('/cgi/popwindow'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);

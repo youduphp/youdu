@@ -72,7 +72,7 @@ class Media
         ];
 
         // 开始上传
-        $url = $this->app->url('/cgi/media/upload');
+        $url = $this->app->buildUrl('/cgi/media/upload');
         $resp = $this->client->upload($url, $parameters);
 
         // 出错后删除加密文件
@@ -108,7 +108,7 @@ class Media
             'encrypt' => $encrypted,
         ];
 
-        $url = $this->app->url('/cgi/media/get');
+        $url = $this->app->buildUrl('/cgi/media/get');
         $resp = $this->client->Post($url, $parameters);
         $header = $this->decodeHeader($resp['header']);
         $fileInfo = $this->app->decryptMsg($header['Encrypt']);
@@ -137,7 +137,7 @@ class Media
             'encrypt' => $encrypted,
         ];
 
-        $url = $this->app->url('/cgi/media/search');
+        $url = $this->app->buildUrl('/cgi/media/search');
         $resp = $this->client->Post($url, $parameters);
 
         if ($resp['httpCode'] != 200) {
