@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace YouduSdk\Youdu\Http;
 
 use CURLFile;
-use YouduSdk\Youdu\Exceptions\Http\RequestException;
+use YouduSdk\Youdu\Exception\Http\RequestException;
 
 class Curl implements ClientInterface
 {

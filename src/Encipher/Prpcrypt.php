@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace YouduSdk\Youdu\Encipher;
 
 use Throwable;
-use YouduSdk\Youdu\Exceptions\ErrorCode;
-use YouduSdk\Youdu\Exceptions\Exception;
+use YouduSdk\Youdu\Exception\ErrorCode;
+use YouduSdk\Youdu\Exception\Exception;
 
 /**
  * Prpcrypt class.

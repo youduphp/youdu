@@ -9,5 +9,5 @@ parameters:
     - '#Static call to instance method Hyperf\\HttpServer\\Router\\Router::[a-zA-Z0-9\\_]+\(\)#'
     - 
       paths:
-        - src/Exceptions/ErrorCode.php
+        - src/Exception/ErrorCode.php
       message: '#Array has \d+ duplicate keys with value.*#'

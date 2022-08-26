@@ -12,8 +12,8 @@ namespace YouduSdk\Youdu\Packer;
 
 use YouduSdk\Youdu\Config;
 use YouduSdk\Youdu\Encipher\Prpcrypt;
-use YouduSdk\Youdu\Exceptions\ErrorCode;
-use YouduSdk\Youdu\Exceptions\Exception;
+use YouduSdk\Youdu\Exception\ErrorCode;
+use YouduSdk\Youdu\Exception\Exception;
 
 class MessagePacker implements PackerInterface
 {

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace YouduSdk\Youdu\Encipher;
 
 use Throwable;
-use YouduSdk\Youdu\Exceptions\ErrorCode;
+use YouduSdk\Youdu\Exception\ErrorCode;
 
 class SHA1
 {

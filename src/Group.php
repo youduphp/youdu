@@ -10,8 +10,8 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu;
 
-use YouduSdk\Youdu\Exceptions\ErrorCode;
-use YouduSdk\Youdu\Exceptions\Exception;
+use YouduSdk\Youdu\Exception\ErrorCode;
+use YouduSdk\Youdu\Exception\Exception;
 use YouduSdk\Youdu\Http\ClientInterface;
 
 class Group
