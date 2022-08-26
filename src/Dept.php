@@ -38,7 +38,7 @@ class Dept
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->decryptMsg($decoded['encrypt'] ?? '');
+        $decrypted = $this->config->getCrypter()->decryptMsg($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR)['deptList'] ?? [];
     }
@@ -57,7 +57,7 @@ class Dept
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->encryptMsg(json_encode([
+            'encrypt' => $this->config->getCrypter()->encryptMsg(json_encode([
                 'id' => $deptId,
                 'name' => $name,
                 'parentId' => $parentId,
@@ -78,7 +78,7 @@ class Dept
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
-        $decrypted = $this->config->decryptMsg($body['encrypt']);
+        $decrypted = $this->config->getCrypter()->decryptMsg($body['encrypt']);
         $decoded = json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
 
         return (int) $decoded['id'];
@@ -98,7 +98,7 @@ class Dept
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->encryptMsg(json_encode([
+            'encrypt' => $this->config->getCrypter()->encryptMsg(json_encode([
                 'id' => $deptId,
                 'name' => $name,
                 'parentId' => $parentId,
@@ -153,7 +153,7 @@ class Dept
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->decryptMsg($decoded['encrypt'] ?? '');
+        $decrypted = $this->config->getCrypter()->decryptMsg($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR)['aliasList'] ?? [];
     }

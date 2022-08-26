@@ -11,8 +11,6 @@ declare(strict_types=1);
 namespace YouduSdk\Youdu;
 
 use YouduSdk\Youdu\Crypt\Prpcrypt;
-use YouduSdk\Youdu\Exceptions\ErrorCode;
-use YouduSdk\Youdu\Exceptions\Exception;
 
 class Config
 {
@@ -35,7 +33,7 @@ class Config
         $this->appId = $config['appId'] ?? '';
         $this->aesKey = $config['aes_key'] ?? '';
         $this->tmpPath = $config['tmp_path'] ?? '';
-        $this->crypter = new Prpcrypt($config['aes_key'] ?? '');
+        $this->crypter = new Prpcrypt($this->appId, $this->aesKey);
     }
 
     public function getApi(): string
@@ -66,37 +64,5 @@ class Config
     public function getCrypter(): Prpcrypt
     {
         return $this->crypter;
-    }
-
-    /**
-     * 加密.
-     */
-    public function encryptMsg(string $unencrypted = ''): string
-    {
-        [$errcode, $encrypted] = $this->crypter->encrypt($unencrypted, $this->appId);
-
-        if ($errcode != 0) {
-            throw new Exception($encrypted, $errcode);
-        }
-
-        return $encrypted;
-    }
-
-    /**
-     * 解密.
-     */
-    public function decryptMsg(?string $encrypted): string
-    {
-        if (strlen($this->aesKey) != 44) {
-            throw new Exception('Illegal aesKey', ErrorCode::$IllegalAesKey);
-        }
-
-        [$errcode, $decrypted] = $this->crypter->decrypt($encrypted, $this->appId);
-
-        if ($errcode != 0) {
-            throw new Exception('Decrypt failed:' . $decrypted, (int) $errcode);
-        }
-
-        return $decrypted;
     }
 }
