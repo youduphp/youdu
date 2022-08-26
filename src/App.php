@@ -25,11 +25,11 @@ class App
 
     protected Group $group;
 
-    protected User $user;
+    protected Media $media;
 
     protected Session $session;
 
-    protected Media $media;
+    protected User $user;
 
     public function __construct(protected Config $config, protected ClientInterface $client)
     {
