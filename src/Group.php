@@ -45,7 +45,7 @@ class Group
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getCrypter()->decryptMsg($decoded['encrypt'] ?? '');
+        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR)['groupList'] ?? [];
     }
@@ -58,7 +58,7 @@ class Group
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->getCrypter()->encryptMsg(json_encode([
+            'encrypt' => $this->config->getPacker()->pack(json_encode([
                 'name' => $name,
             ], JSON_THROW_ON_ERROR)),
         ];
@@ -75,7 +75,7 @@ class Group
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
-        $decrypted = $this->config->getCrypter()->decryptMsg($body['encrypt']);
+        $decrypted = $this->config->getPacker()->unpack($body['encrypt']);
         $decoded = json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
 
         return $decoded['id'];
@@ -104,7 +104,7 @@ class Group
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->getCrypter()->encryptMsg(json_encode([
+            'encrypt' => $this->config->getPacker()->pack(json_encode([
                 'id' => $groupId,
                 'name' => $name,
             ], JSON_THROW_ON_ERROR)),
@@ -137,7 +137,7 @@ class Group
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getCrypter()->decryptMsg($decoded['encrypt'] ?? '');
+        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR) ?? [];
     }
@@ -150,7 +150,7 @@ class Group
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->getCrypter()->encryptMsg(json_encode([
+            'encrypt' => $this->config->getPacker()->pack(json_encode([
                 'id' => $groupId,
                 'userList' => $members,
             ], JSON_THROW_ON_ERROR)),
@@ -177,7 +177,7 @@ class Group
     public function delMember(string $groupId, array $members = []): bool
     {
         $parameters = [
-            'encrypt' => $this->config->getCrypter()->encryptMsg(json_encode([
+            'encrypt' => $this->config->getPacker()->pack(json_encode([
                 'id' => $groupId,
                 'userList' => $members,
             ], JSON_THROW_ON_ERROR)),
@@ -211,7 +211,7 @@ class Group
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getCrypter()->decryptMsg($decoded['encrypt'] ?? '');
+        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR)['belong'] ?? false;
     }

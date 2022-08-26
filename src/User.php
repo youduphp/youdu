@@ -40,7 +40,7 @@ class User
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getCrypter()->decryptMsg($decoded['encrypt'] ?? '');
+        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR)['userList'] ?? [];
     }
@@ -57,7 +57,7 @@ class User
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getCrypter()->decryptMsg($decoded['encrypt'] ?? '');
+        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR)['userList'] ?? [];
     }
@@ -75,7 +75,7 @@ class User
      */
     public function create($userId, string $name, int $gender = 0, string $mobile = '', string $phone = '', string $email = '', array $dept = []): bool
     {
-        $parameters = $this->config->getCrypter()->encryptMsg(json_encode([
+        $parameters = $this->config->getPacker()->pack(json_encode([
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
             'userId' => $userId,
@@ -115,7 +115,7 @@ class User
      */
     public function update($userId, string $name, int $gender = 0, string $mobile = '', string $phone = '', string $email = '', array $dept = []): bool
     {
-        $parameters = $this->config->getCrypter()->encryptMsg(json_encode([
+        $parameters = $this->config->getPacker()->pack(json_encode([
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
             'userId' => $userId,
@@ -153,7 +153,7 @@ class User
      */
     public function updatePosition($userId, int $deptId, string $position = '', int $weight = 0, int $sortId = 0): bool
     {
-        $parameters = $this->config->getCrypter()->encryptMsg(json_encode([
+        $parameters = $this->config->getPacker()->pack(json_encode([
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
             'userId' => $userId,
@@ -185,7 +185,7 @@ class User
     public function delete($userId): bool
     {
         if (is_array($userId)) {
-            $parameters = $this->config->getCrypter()->encryptMsg(json_encode([
+            $parameters = $this->config->getPacker()->pack(json_encode([
                 'buin' => $this->config->getBuin(),
                 'appId' => $this->config->getAppId(),
                 'delList' => $userId,
@@ -230,7 +230,7 @@ class User
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getCrypter()->decryptMsg($decoded['encrypt'] ?? '');
+        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR) ?? [];
     }
@@ -247,7 +247,7 @@ class User
         // md5 -> hex -> lower
         $passwd = strtolower(bin2hex(md5($passwd)));
 
-        $parameters = $this->config->getCrypter()->encryptMsg(json_encode([
+        $parameters = $this->config->getPacker()->pack(json_encode([
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
             'userId' => $userId,
@@ -293,8 +293,8 @@ class User
         $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
 
         try {
-            $encryptedFile = $this->config->getCrypter()->encryptMsg($originalContent);
-            $encryptedMsg = $this->config->getCrypter()->encryptMsg(json_encode([
+            $encryptedFile = $this->config->getPacker()->pack($originalContent);
+            $encryptedMsg = $this->config->getPacker()->pack(json_encode([
                 'type' => 'image',
                 'name' => basename($file),
             ], JSON_THROW_ON_ERROR));
@@ -336,7 +336,7 @@ class User
     public function getAvatar($userId, int $size = 0): string
     {
         $resp = $this->client->get($this->app->buildUrl('/cgi/avatar/get'), ['userId' => $userId, 'size' => $size]);
-        return $this->config->getCrypter()->decryptMsg($resp['body'] ?? '');
+        return $this->config->getPacker()->unpack($resp['body'] ?? '');
     }
 
     /**

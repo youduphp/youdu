@@ -10,59 +10,63 @@ declare(strict_types=1);
  */
 namespace YouduSdk\Youdu;
 
-use YouduSdk\Youdu\Encipher\Prpcrypt;
+use YouduSdk\Youdu\Packer\MessagePacker;
+use YouduSdk\Youdu\Packer\PackerInterface;
 
 class Config
 {
-    protected string $api = '';
+    protected array $config = [];
 
-    protected int $buin = 0;
+    protected PackerInterface $packer;
 
-    protected string $appId = '';
-
-    protected string $aesKey = '';
-
-    protected string $tmpPath = '/tmp';
-
-    protected Prpcrypt $crypter;
-
-    public function __construct(array $config)
+    public function __construct(array $config = [])
     {
-        $this->api = $config['api'] ?? '';
-        $this->buin = $config['buin'] ?? '';
-        $this->appId = $config['appId'] ?? '';
-        $this->aesKey = $config['aes_key'] ?? '';
-        $this->tmpPath = $config['tmp_path'] ?? '';
-        $this->crypter = new Prpcrypt($this->appId, $this->aesKey);
+        $this->config = array_merge([
+            'api' => '',
+            'buin' => 0,
+            'appId' => '',
+            'aes_key' => '',
+            'tmp_path' => '',
+        ], $config);
+        $this->packer = new MessagePacker($this);
+    }
+
+    public function get(string $key = null, $default = null)
+    {
+        if (is_null($key)) {
+            return $this->config;
+        }
+
+        return $this->config[$key] ?? $default;
     }
 
     public function getApi(): string
     {
-        return $this->api;
+        return $this->get('api', '');
     }
 
     public function getBuin(): int
     {
-        return $this->buin;
+        return (int) $this->get('buin', 0);
     }
 
     public function getAppId(): string
     {
-        return $this->appId;
+        return $this->get('app_id', '');
     }
 
     public function getAesKey(): string
     {
-        return $this->aesKey;
+        return $this->get('aes_key', '');
     }
 
     public function getTmpPath(): string
     {
-        return $this->tmpPath;
+        return $this->get('tmp_path', '/tmp');
     }
 
-    public function getCrypter(): Prpcrypt
+    public function getPacker(): MessagePacker
     {
-        return $this->crypter;
+        return $this->packer;
     }
 }

@@ -35,6 +35,7 @@ class Prpcrypt
      * 对明文进行加密.
      *
      * @param string $text 需要加密的明文
+     * @return array<int, string>
      */
     public function encrypt(string $text): array
     {
@@ -103,7 +104,7 @@ class Prpcrypt
         [$errcode, $encrypted] = $this->encrypt($unencrypted);
 
         if ($errcode != 0) {
-            throw new Exception($encrypted, $errcode);
+            throw new Exception($encrypted, (int) $errcode);
         }
 
         return $encrypted;

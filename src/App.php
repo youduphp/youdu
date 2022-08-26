@@ -80,7 +80,7 @@ class App
      */
     public function getAccessToken(): string
     {
-        $encrypted = $this->config->getCrypter()->encryptMsg((string) time());
+        $encrypted = $this->config->getPacker()->pack((string) time());
 
         $parameters = [
             'buin' => $this->config->getBuin(),
@@ -96,7 +96,7 @@ class App
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
-        $decrypted = $this->config->getCrypter()->decryptMsg($body['encrypt']);
+        $decrypted = $this->config->getPacker()->unpack($body['encrypt']);
         $decoded = json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
 
         return $decoded['accessToken'];
@@ -127,7 +127,7 @@ class App
      */
     public function send(MessageInterface $message): bool
     {
-        $encrypted = $this->config->getCrypter()->encryptMsg($message->toJson());
+        $encrypted = $this->config->getPacker()->pack($message->toJson());
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
@@ -209,7 +209,7 @@ class App
     {
         $parameters = [
             'app_id' => $this->config->getAppId(),
-            'msg_encrypt' => $this->config->getCrypter()->encryptMsg(json_encode([
+            'msg_encrypt' => $this->config->getPacker()->pack(json_encode([
                 'account' => $account,
                 'tip' => $tip,
                 'count' => $msgCount,
@@ -246,7 +246,7 @@ class App
 
         $parameters = [
             'app_id' => $this->config->getAppId(),
-            'msg_encrypt' => $this->config->getCrypter()->encryptMsg($message->toJson()),
+            'msg_encrypt' => $this->config->getPacker()->pack($message->toJson()),
         ];
 
         $resp = $this->client->post($this->buildUrl('/cgi/popwindow'), $parameters);
