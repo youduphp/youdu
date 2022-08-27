@@ -12,15 +12,17 @@ use YouduPhp\Youdu\Config;
 use YouduPhp\Youdu\Packer\MessagePacker;
 
 beforeEach(function () {
-    $this->config = new Config([
+    $config = new Config([
         'api' => 'https://127.0.0.1:8888',
-        'buin' => 123,
+        'buin' => 88888888,
         'app_id' => uniqid(),
         'aes_key' => uniqid(),
         'tmp_path' => '/tmp',
     ]);
+    $this->packer = new MessagePacker($config);
 });
 
 it('asserts message packer', function () {
-    expect($this->config->getPacker())->toBeInstanceOf(MessagePacker::class);
+    expect($this->packer)->toBeInstanceOf(MessagePacker::class);
+    // $this->packer->pack('hello');
 });
