@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 /**
- * This file is part of hyperf/helpers.
+ * This file is part of youduphp/youdu.
  *
- * @link     https://github.com/youdusdk/youdu-php
- * @document https://github.com/youdusdk/youdu-php/blob/main/README.md
+ * @link     https://github.com/youduphp/youdu
+ * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
 $header = <<<'EOF'
-This file is part of youdusdk/youdu-php.
+This file is part of youduphp/youdu.
 
-@link     https://github.com/youdusdk/youdu-php
-@document https://github.com/youdusdk/youdu-php/blob/main/README.md
+@link     https://github.com/youduphp/youdu
+@document https://github.com/youduphp/youdu/blob/main/README.md
 @contact  huangdijia@gmail.com
 EOF;
 
