@@ -8,9 +8,9 @@ declare(strict_types=1);
  * @document https://github.com/youdusdk/youdu-php/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-use YouduSdk\Youdu\Config;
-use YouduSdk\Youdu\Generator\AccessTokenGenerator;
-use YouduSdk\Youdu\Http\ClientInterface;
+use YouduPhp\Youdu\Config;
+use YouduPhp\Youdu\Generator\AccessTokenGenerator;
+use YouduPhp\Youdu\Http\ClientInterface;
 
 beforeEach(function () {
     $this->config = new Config([

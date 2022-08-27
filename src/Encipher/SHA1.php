@@ -8,10 +8,10 @@ declare(strict_types=1);
  * @document https://github.com/youdusdk/youdu-php/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduSdk\Youdu\Encipher;
+namespace YouduPhp\Youdu\Encipher;
 
 use Throwable;
-use YouduSdk\Youdu\Exception\ErrorCode;
+use YouduPhp\Youdu\Exception\ErrorCode;
 
 class SHA1
 {

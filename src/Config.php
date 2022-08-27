@@ -8,13 +8,13 @@ declare(strict_types=1);
  * @document https://github.com/youdusdk/youdu-php/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduSdk\Youdu;
+namespace YouduPhp\Youdu;
 
-use YouduSdk\Youdu\Generator\AccessTokenGenerator;
-use YouduSdk\Youdu\Generator\UrlGenerator;
-use YouduSdk\Youdu\Http\ClientInterface;
-use YouduSdk\Youdu\Packer\MessagePacker;
-use YouduSdk\Youdu\Packer\PackerInterface;
+use YouduPhp\Youdu\Generator\AccessTokenGenerator;
+use YouduPhp\Youdu\Generator\UrlGenerator;
+use YouduPhp\Youdu\Http\ClientInterface;
+use YouduPhp\Youdu\Packer\MessagePacker;
+use YouduPhp\Youdu\Packer\PackerInterface;
 
 class Config
 {

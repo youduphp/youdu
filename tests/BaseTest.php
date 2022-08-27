@@ -8,14 +8,14 @@ declare(strict_types=1);
  * @document https://github.com/youdusdk/youdu-php/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-use YouduSdk\Youdu\App;
-use YouduSdk\Youdu\Config;
-use YouduSdk\Youdu\Dept;
-use YouduSdk\Youdu\Group;
-use YouduSdk\Youdu\Http\ClientInterface;
-use YouduSdk\Youdu\Media;
-use YouduSdk\Youdu\Session;
-use YouduSdk\Youdu\User;
+use YouduPhp\Youdu\App;
+use YouduPhp\Youdu\Config;
+use YouduPhp\Youdu\Dept;
+use YouduPhp\Youdu\Group;
+use YouduPhp\Youdu\Http\ClientInterface;
+use YouduPhp\Youdu\Media;
+use YouduPhp\Youdu\Session;
+use YouduPhp\Youdu\User;
 
 beforeEach(function () {
     $config = new Config([], mock(ClientInterface::class)->expect());

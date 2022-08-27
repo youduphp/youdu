@@ -8,15 +8,15 @@ declare(strict_types=1);
  * @document https://github.com/youdusdk/youdu-php/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduSdk\Youdu;
+namespace YouduPhp\Youdu;
 
-use YouduSdk\Youdu\Exception\ErrorCode;
-use YouduSdk\Youdu\Exception\Exception;
-use YouduSdk\Youdu\Http\ClientInterface;
-use YouduSdk\Youdu\Messages\App\MessageInterface;
-use YouduSdk\Youdu\Messages\App\PopWindow;
-use YouduSdk\Youdu\Messages\App\SysMsg;
-use YouduSdk\Youdu\Messages\App\Text;
+use YouduPhp\Youdu\Exception\ErrorCode;
+use YouduPhp\Youdu\Exception\Exception;
+use YouduPhp\Youdu\Http\ClientInterface;
+use YouduPhp\Youdu\Messages\App\MessageInterface;
+use YouduPhp\Youdu\Messages\App\PopWindow;
+use YouduPhp\Youdu\Messages\App\SysMsg;
+use YouduPhp\Youdu\Messages\App\Text;
 
 class App
 {

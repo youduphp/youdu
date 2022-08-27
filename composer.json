@@ -1,12 +1,12 @@
 {
-    "name": "youdusdk/youdu",
+    "name": "youduphp/youdu",
     "description": "The php sdk for youdu.",
     "type": "library",
     "keywords": [
         "php",
         "youdu"
     ],
-    "homepage": "https://github.com/youdusdk/youdu-php",
+    "homepage": "https://github.com/youduphp/youdu",
     "license": "MIT",
     "authors": [{
         "name": "huangdijia",
@@ -27,12 +27,12 @@
             "src/helpers.php"
         ],
         "psr-4": {
-            "YouduSdk\\Youdu\\": "src/"
+            "YouduPhp\\Youdu\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "YouduSdk\\Youdu\\Tests\\": "tests/"
+            "YouduPhp\\Youdu\\Tests\\": "tests/"
         }
     },
     "scripts": {

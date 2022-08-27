@@ -8,11 +8,11 @@ declare(strict_types=1);
  * @document https://github.com/youdusdk/youdu-php/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduSdk\Youdu;
+namespace YouduPhp\Youdu;
 
-use YouduSdk\Youdu\Exception\ErrorCode;
-use YouduSdk\Youdu\Exception\Exception;
-use YouduSdk\Youdu\Http\ClientInterface;
+use YouduPhp\Youdu\Exception\ErrorCode;
+use YouduPhp\Youdu\Exception\Exception;
+use YouduPhp\Youdu\Http\ClientInterface;
 
 class Dept
 {

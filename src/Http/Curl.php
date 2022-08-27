@@ -8,10 +8,10 @@ declare(strict_types=1);
  * @document https://github.com/youdusdk/youdu-php/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduSdk\Youdu\Http;
+namespace YouduPhp\Youdu\Http;
 
 use CURLFile;
-use YouduSdk\Youdu\Exception\Http\RequestException;
+use YouduPhp\Youdu\Exception\Http\RequestException;
 
 class Curl implements ClientInterface
 {

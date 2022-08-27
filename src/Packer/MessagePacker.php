@@ -8,12 +8,12 @@ declare(strict_types=1);
  * @document https://github.com/youdusdk/youdu-php/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduSdk\Youdu\Packer;
+namespace YouduPhp\Youdu\Packer;
 
-use YouduSdk\Youdu\Config;
-use YouduSdk\Youdu\Encipher\Prpcrypt;
-use YouduSdk\Youdu\Exception\ErrorCode;
-use YouduSdk\Youdu\Exception\Exception;
+use YouduPhp\Youdu\Config;
+use YouduPhp\Youdu\Encipher\Prpcrypt;
+use YouduPhp\Youdu\Exception\ErrorCode;
+use YouduPhp\Youdu\Exception\Exception;
 
 class MessagePacker implements PackerInterface
 {
