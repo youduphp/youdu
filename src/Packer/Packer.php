@@ -15,7 +15,7 @@ use YouduPhp\Youdu\Encipher\Prpcrypt;
 use YouduPhp\Youdu\Exception\ErrorCode;
 use YouduPhp\Youdu\Exception\Exception;
 
-class MessagePacker implements PackerInterface
+class Packer implements PackerInterface
 {
     protected Prpcrypt $crypter;
 

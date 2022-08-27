@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @contact  huangdijia@gmail.com
  */
 use YouduPhp\Youdu\Config;
-use YouduPhp\Youdu\Packer\MessagePacker;
+use YouduPhp\Youdu\Packer\Packer;
 
 beforeEach(function () {
     $config = new Config([
@@ -19,10 +19,10 @@ beforeEach(function () {
         'aes_key' => uniqid(),
         'tmp_path' => '/tmp',
     ]);
-    $this->packer = new MessagePacker($config);
+    $this->packer = new Packer($config);
 });
 
 it('asserts message packer', function () {
-    expect($this->packer)->toBeInstanceOf(MessagePacker::class);
+    expect($this->packer)->toBeInstanceOf(Packer::class);
     // $this->packer->pack('hello');
 });

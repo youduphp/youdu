@@ -2,6 +2,7 @@
     "version": "0.1",
     "language": "en",
     "words": [
+        "addmember",
         "aggs",
         "agreen",
         "analyse",
@@ -12,6 +13,7 @@
         "CONNECTTIMEOUT",
         "crypter",
         "CURLOPT",
+        "delmember",
         "descr",
         "Exlink",
         "Facetory",
@@ -20,6 +22,7 @@
         "Huangdijia",
         "hyperspeed",
         "idcard",
+        "ismember",
         "Laravel",
         "microservice",
         "notbetween",

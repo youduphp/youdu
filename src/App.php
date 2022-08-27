@@ -12,19 +12,18 @@ namespace YouduPhp\Youdu;
 
 use YouduPhp\Youdu\Exception\ErrorCode;
 use YouduPhp\Youdu\Exception\Exception;
+use YouduPhp\Youdu\Generator\UrlGenerator;
 use YouduPhp\Youdu\Http\ClientInterface;
-use YouduPhp\Youdu\Messages\App\MessageInterface;
-use YouduPhp\Youdu\Messages\App\PopWindow;
-use YouduPhp\Youdu\Messages\App\SysMsg;
-use YouduPhp\Youdu\Messages\App\Text;
+use YouduPhp\Youdu\Message\App\MessageInterface;
+use YouduPhp\Youdu\Message\App\PopWindow;
+use YouduPhp\Youdu\Message\App\SysMsg;
+use YouduPhp\Youdu\Message\App\Text;
+use YouduPhp\Youdu\Packer\PackerInterface;
 
 class App
 {
-    protected ClientInterface $client;
-
-    public function __construct(protected Config $config)
+    public function __construct(protected Config $config, protected ?ClientInterface $client = null, protected PackerInterface $packer, protected UrlGenerator $urlGenerator)
     {
-        $this->client = $config->getClient();
     }
 
     /**
@@ -32,14 +31,14 @@ class App
      */
     public function send(MessageInterface $message): bool
     {
-        $encrypted = $this->config->getPacker()->pack($message->toJson());
+        $encrypted = $this->packer->pack($message->toJson());
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
             'encrypt' => $encrypted,
         ];
 
-        $url = $this->config->getUrlGenerator()->generate('/cgi/msg/send');
+        $url = $this->urlGenerator->generate('/cgi/msg/send');
         $resp = $this->client->post($url, $parameters);
 
         if ($resp['httpCode'] != 200) {
@@ -93,7 +92,7 @@ class App
     public function sendToAll(SysMsg|string $message, bool $onlineOnly = false): bool
     {
         if (is_string($message)) {
-            $items = new Messages\App\Items\SysMsg();
+            $items = new Message\App\Items\SysMsg();
             $items->addText($message);
             $message = new SysMsg($items);
         }
@@ -114,14 +113,14 @@ class App
     {
         $parameters = [
             'app_id' => $this->config->getAppId(),
-            'msg_encrypt' => $this->config->getPacker()->pack(json_encode([
+            'msg_encrypt' => $this->packer->pack(json_encode([
                 'account' => $account,
                 'tip' => $tip,
                 'count' => $msgCount,
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/set.ent.notice'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/set.ent.notice'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -151,10 +150,10 @@ class App
 
         $parameters = [
             'app_id' => $this->config->getAppId(),
-            'msg_encrypt' => $this->config->getPacker()->pack($message->toJson()),
+            'msg_encrypt' => $this->packer->pack($message->toJson()),
         ];
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/popwindow'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/popwindow'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);

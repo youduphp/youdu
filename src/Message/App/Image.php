@@ -8,25 +8,28 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduPhp\Youdu\Messages\Session;
+namespace YouduPhp\Youdu\Message\App;
 
 class Image extends AbstractMessage
 {
     /**
      * 图片消息.
      *
-     * @param string $mediaId 图片素材文件id。通过上传素材文件接口获取
+     * @param string $mediaId 图片素材文件ID。通过上传素材文件接口获取
      */
     public function __construct(protected string $mediaId = '')
     {
     }
 
-    public function toArray(): array
+    /**
+     * 转成 array.
+     * @return array
+     */
+    public function toArray()
     {
         return [
-            'sessionId' => $this->sessionId,
-            'receiver' => $this->receiver,
-            'sender' => $this->sender,
+            'toUser' => $this->toUser,
+            'toDept' => $this->toDept,
             'msgType' => 'image',
             'image' => [
                 'media_id' => $this->mediaId,

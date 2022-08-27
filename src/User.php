@@ -12,15 +12,14 @@ namespace YouduPhp\Youdu;
 
 use YouduPhp\Youdu\Exception\ErrorCode;
 use YouduPhp\Youdu\Exception\Exception;
+use YouduPhp\Youdu\Generator\UrlGenerator;
 use YouduPhp\Youdu\Http\ClientInterface;
+use YouduPhp\Youdu\Packer\PackerInterface;
 
 class User
 {
-    protected ClientInterface $client;
-
-    public function __construct(protected Config $config)
+    public function __construct(protected Config $config, protected ClientInterface $client, protected PackerInterface $packer, protected UrlGenerator $urlGenerator)
     {
-        $this->client = $config->getClient();
     }
 
     /**
@@ -30,14 +29,14 @@ class User
      */
     public function simpleList(?int $deptId = 0)
     {
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/user/simplelist'), ['deptId' => $deptId]);
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/user/simplelist'), ['deptId' => $deptId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
+        $decrypted = $this->packer->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR)['userList'] ?? [];
     }
@@ -47,14 +46,14 @@ class User
      */
     public function lists(?int $deptId = 0): array
     {
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/user/list'), ['deptId' => $deptId]);
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/user/list'), ['deptId' => $deptId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
+        $decrypted = $this->packer->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR)['userList'] ?? [];
     }
@@ -72,7 +71,7 @@ class User
      */
     public function create($userId, string $name, int $gender = 0, string $mobile = '', string $phone = '', string $email = '', array $dept = []): bool
     {
-        $parameters = $this->config->getPacker()->pack(json_encode([
+        $parameters = $this->packer->pack(json_encode([
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
             'userId' => $userId,
@@ -84,7 +83,7 @@ class User
             'dept' => $dept,
         ], JSON_THROW_ON_ERROR));
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/user/create'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/user/create'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -112,7 +111,7 @@ class User
      */
     public function update($userId, string $name, int $gender = 0, string $mobile = '', string $phone = '', string $email = '', array $dept = []): bool
     {
-        $parameters = $this->config->getPacker()->pack(json_encode([
+        $parameters = $this->packer->pack(json_encode([
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
             'userId' => $userId,
@@ -124,7 +123,7 @@ class User
             'dept' => $dept,
         ], JSON_THROW_ON_ERROR));
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/user/update'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/user/update'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -150,7 +149,7 @@ class User
      */
     public function updatePosition($userId, int $deptId, string $position = '', int $weight = 0, int $sortId = 0): bool
     {
-        $parameters = $this->config->getPacker()->pack(json_encode([
+        $parameters = $this->packer->pack(json_encode([
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
             'userId' => $userId,
@@ -160,7 +159,7 @@ class User
             'sortId' => $sortId,
         ], JSON_THROW_ON_ERROR));
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/user/positionupdate'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/user/positionupdate'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -182,13 +181,13 @@ class User
     public function delete($userId): bool
     {
         if (is_array($userId)) {
-            $parameters = $this->config->getPacker()->pack(json_encode([
+            $parameters = $this->packer->pack(json_encode([
                 'buin' => $this->config->getBuin(),
                 'appId' => $this->config->getAppId(),
                 'delList' => $userId,
             ], JSON_THROW_ON_ERROR));
 
-            $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/user/batchdelete'), $parameters);
+            $resp = $this->client->post($this->urlGenerator->generate('/cgi/user/batchdelete'), $parameters);
 
             if ($resp['httpCode'] != 200) {
                 throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -204,7 +203,7 @@ class User
         }
 
         // single delete
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/user/delete'), ['userId' => $userId]);
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/user/delete'), ['userId' => $userId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
@@ -220,14 +219,14 @@ class User
      */
     public function get($userId): array
     {
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/user/get'), ['userId' => $userId]);
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/user/get'), ['userId' => $userId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== 0) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
+        $decrypted = $this->packer->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR) ?? [];
     }
@@ -244,7 +243,7 @@ class User
         // md5 -> hex -> lower
         $passwd = strtolower(bin2hex(md5($passwd)));
 
-        $parameters = $this->config->getPacker()->pack(json_encode([
+        $parameters = $this->packer->pack(json_encode([
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
             'userId' => $userId,
@@ -252,7 +251,7 @@ class User
             'passwd' => $passwd,
         ], JSON_THROW_ON_ERROR));
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/user/setauth'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/user/setauth'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -290,8 +289,8 @@ class User
         $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
 
         try {
-            $encryptedFile = $this->config->getPacker()->pack($originalContent);
-            $encryptedMsg = $this->config->getPacker()->pack(json_encode([
+            $encryptedFile = $this->packer->pack($originalContent);
+            $encryptedMsg = $this->packer->pack(json_encode([
                 'type' => 'image',
                 'name' => basename($file),
             ], JSON_THROW_ON_ERROR));
@@ -311,7 +310,7 @@ class User
             ];
 
             // 开始上传
-            $url = $this->config->getUrlGenerator()->generate('/cgi/avatar/set');
+            $url = $this->urlGenerator->generate('/cgi/avatar/set');
             $resp = $this->client->upload($url, $parameters);
 
             if ($resp['errcode'] !== 0) {
@@ -332,8 +331,8 @@ class User
      */
     public function getAvatar($userId, int $size = 0): string
     {
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/avatar/get'), ['userId' => $userId, 'size' => $size]);
-        return $this->config->getPacker()->unpack($resp['body'] ?? '');
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/avatar/get'), ['userId' => $userId, 'size' => $size]);
+        return $this->packer->unpack($resp['body'] ?? '');
     }
 
     /**
@@ -341,7 +340,7 @@ class User
      */
     public function identify(string $token): array
     {
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/identify?token=' . $token, false));
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/identify?token=' . $token, false));
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);

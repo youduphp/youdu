@@ -13,17 +13,16 @@ namespace YouduPhp\Youdu;
 use YouduPhp\Youdu\Exception\AccessTokenDoesNotExistException;
 use YouduPhp\Youdu\Exception\ErrorCode;
 use YouduPhp\Youdu\Exception\Exception;
+use YouduPhp\Youdu\Generator\UrlGenerator;
 use YouduPhp\Youdu\Http\ClientInterface;
-use YouduPhp\Youdu\Messages\Session\MessageInterface;
-use YouduPhp\Youdu\Messages\Session\Text;
+use YouduPhp\Youdu\Message\Session\MessageInterface;
+use YouduPhp\Youdu\Message\Session\Text;
+use YouduPhp\Youdu\Packer\PackerInterface;
 
 class Session
 {
-    protected ClientInterface $client;
-
-    public function __construct(protected Config $config)
+    public function __construct(protected Config $config, protected ClientInterface $client, protected PackerInterface $packer, protected UrlGenerator $urlGenerator)
     {
-        $this->client = $config->getClient();
     }
 
     /**
@@ -39,7 +38,7 @@ class Session
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->getPacker()->pack(json_encode([
+            'encrypt' => $this->packer->pack(json_encode([
                 'title' => $title,
                 'creator' => $creator,
                 'type' => $type,
@@ -53,7 +52,7 @@ class Session
 
         $member = array_map(fn ($item) => (string) $item, $member);
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/session/create'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/session/create'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -65,7 +64,7 @@ class Session
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($body['encrypt']);
+        $decrypted = $this->packer->unpack($body['encrypt']);
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
     }
 
@@ -86,7 +85,7 @@ class Session
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->getPacker()->pack(json_encode([
+            'encrypt' => $this->packer->pack(json_encode([
                 'sessionId' => $sessionId,
                 'title' => $title,
                 'opUser' => $opUser,
@@ -95,7 +94,7 @@ class Session
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/session/update'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/session/update'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -107,7 +106,7 @@ class Session
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($body['encrypt']);
+        $decrypted = $this->packer->unpack($body['encrypt']);
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
     }
@@ -117,14 +116,14 @@ class Session
      */
     public function info(string $sessionId): array
     {
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/session/get'), ['sessionId' => $sessionId]);
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/session/get'), ['sessionId' => $sessionId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== ErrorCode::$OK) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
+        $decrypted = $this->packer->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR) ?? [];
     }
@@ -140,10 +139,10 @@ class Session
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->getPacker()->pack($message->toJson()),
+            'encrypt' => $this->packer->pack($message->toJson()),
         ];
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/session/send'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/session/send'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -160,10 +159,8 @@ class Session
 
     /**
      * 发送个人会话消息.
-     *
-     * @param string $message
      */
-    public function sendToUser(string $sender, string $receiver, $message = ''): bool
+    public function sendToUser(string $sender, string $receiver, MessageInterface|string $message = ''): bool
     {
         if (is_string($message)) {
             $message = new Text($message);
@@ -177,10 +174,8 @@ class Session
 
     /**
      * 发送多人会话消息.
-     *
-     * @param string $message
      */
-    public function sendToSession(string $sender, string $sessionId, $message = ''): bool
+    public function sendToSession(string $sender, string $sessionId, MessageInterface|string $message = ''): bool
     {
         if (is_string($message)) {
             $message = new Text($message);

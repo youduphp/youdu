@@ -8,31 +8,31 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduPhp\Youdu\Messages\App;
+namespace YouduPhp\Youdu\Message\App;
 
-class Image extends AbstractMessage
+class Text extends AbstractMessage
 {
     /**
-     * 图片消息.
+     * 文本消息.
      *
-     * @param string $mediaId 图片素材文件ID。通过上传素材文件接口获取
+     * @param string $content 消息内容，支持表情，最长不超过600个字符，超出部分将自动截取
      */
-    public function __construct(protected string $mediaId = '')
+    public function __construct(protected string $content = '')
     {
     }
 
     /**
      * 转成 array.
-     * @return array
+     * @return (string|string[])[]
      */
     public function toArray()
     {
         return [
             'toUser' => $this->toUser,
             'toDept' => $this->toDept,
-            'msgType' => 'image',
-            'image' => [
-                'media_id' => $this->mediaId,
+            'msgType' => 'text',
+            'text' => [
+                'content' => $this->content,
             ],
         ];
     }

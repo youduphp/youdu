@@ -12,10 +12,12 @@ namespace YouduPhp\Youdu\Generator;
 
 use RuntimeException;
 use YouduPhp\Youdu\Config;
+use YouduPhp\Youdu\Http\ClientInterface;
+use YouduPhp\Youdu\Packer\PackerInterface;
 
 class AccessTokenGenerator
 {
-    public function __construct(protected Config $config)
+    public function __construct(protected Config $config, protected ClientInterface $client, protected PackerInterface $packer)
     {
     }
 
@@ -24,16 +26,16 @@ class AccessTokenGenerator
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->getPacker()->pack((string) time()),
+            'encrypt' => $this->packer->pack((string) time()),
         ];
 
-        $response = $this->config->getClient()->post('/cgi/gettoken', $parameters);
+        $response = $this->client->post('/cgi/gettoken', $parameters);
 
         if ($response['errcode'] != 0) {
             throw new RuntimeException($response['errmsg'], $response['errcode']);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($response['encrypt']);
+        $decrypted = $this->packer->unpack($response['encrypt']);
         $decoded = json_decode($decrypted, true);
 
         return $decoded['accessToken'];

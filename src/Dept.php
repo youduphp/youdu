@@ -12,15 +12,14 @@ namespace YouduPhp\Youdu;
 
 use YouduPhp\Youdu\Exception\ErrorCode;
 use YouduPhp\Youdu\Exception\Exception;
+use YouduPhp\Youdu\Generator\UrlGenerator;
 use YouduPhp\Youdu\Http\ClientInterface;
+use YouduPhp\Youdu\Packer\PackerInterface;
 
 class Dept
 {
-    protected ClientInterface $client;
-
-    public function __construct(protected Config $config)
+    public function __construct(protected Config $config, protected ClientInterface $client, protected PackerInterface $packer, protected UrlGenerator $urlGenerator)
     {
-        $this->client = $config->getClient();
     }
 
     /**
@@ -28,14 +27,14 @@ class Dept
      */
     public function lists(int $parentDeptId = 0): array
     {
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/dept/list'), ['id' => $parentDeptId]);
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/dept/list'), ['id' => $parentDeptId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== ErrorCode::$OK) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
+        $decrypted = $this->packer->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR)['deptList'] ?? [];
     }
@@ -54,7 +53,7 @@ class Dept
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->getPacker()->pack(json_encode([
+            'encrypt' => $this->packer->pack(json_encode([
                 'id' => $deptId,
                 'name' => $name,
                 'parentId' => $parentId,
@@ -63,7 +62,7 @@ class Dept
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/dept/create'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/dept/create'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -75,7 +74,7 @@ class Dept
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($body['encrypt']);
+        $decrypted = $this->packer->unpack($body['encrypt']);
         $decoded = json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
 
         return (int) $decoded['id'];
@@ -95,7 +94,7 @@ class Dept
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->getPacker()->pack(json_encode([
+            'encrypt' => $this->packer->pack(json_encode([
                 'id' => $deptId,
                 'name' => $name,
                 'parentId' => $parentId,
@@ -104,7 +103,7 @@ class Dept
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/dept/update'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/dept/update'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -126,7 +125,7 @@ class Dept
      */
     public function delete(int $deptId): bool
     {
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/dept/delete'), ['id' => $deptId]);
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/dept/delete'), ['id' => $deptId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== ErrorCode::$OK) {
@@ -143,14 +142,14 @@ class Dept
      */
     public function getId(string $alias = ''): array
     {
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/dept/list'), ['alias' => $alias]);
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/dept/list'), ['alias' => $alias]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== ErrorCode::$OK) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
+        $decrypted = $this->packer->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR)['aliasList'] ?? [];
     }

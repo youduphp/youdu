@@ -10,25 +10,10 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu;
 
-use YouduPhp\Youdu\Generator\AccessTokenGenerator;
-use YouduPhp\Youdu\Generator\UrlGenerator;
-use YouduPhp\Youdu\Http\ClientInterface;
-use YouduPhp\Youdu\Packer\MessagePacker;
-use YouduPhp\Youdu\Packer\PackerInterface;
-
 class Config
 {
-    protected PackerInterface $packer;
-
-    protected AccessTokenGenerator $accessTokenGenerator;
-
-    protected UrlGenerator $urlGenerator;
-
-    public function __construct(protected array $config = [], protected ?ClientInterface $client = null)
+    public function __construct(protected array $config = [])
     {
-        $this->packer = new MessagePacker($this);
-        $this->accessTokenGenerator = new AccessTokenGenerator($this);
-        $this->urlGenerator = new UrlGenerator($this->accessTokenGenerator);
     }
 
     public function get(string $key = null, $default = null)
@@ -68,30 +53,5 @@ class Config
     public function getTmpPath(): string
     {
         return $this->get('tmp_path', '/tmp');
-    }
-
-    public function getPacker(): MessagePacker
-    {
-        return $this->packer;
-    }
-
-    public function setClient(ClientInterface $client)
-    {
-        $this->client = $client;
-    }
-
-    public function getClient(): ?ClientInterface
-    {
-        return $this->client;
-    }
-
-    public function getAccessTokenGenerator(): AccessTokenGenerator
-    {
-        return $this->accessTokenGenerator;
-    }
-
-    public function getUrlGenerator(): UrlGenerator
-    {
-        return $this->urlGenerator;
     }
 }

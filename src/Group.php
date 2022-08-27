@@ -12,15 +12,14 @@ namespace YouduPhp\Youdu;
 
 use YouduPhp\Youdu\Exception\ErrorCode;
 use YouduPhp\Youdu\Exception\Exception;
+use YouduPhp\Youdu\Generator\UrlGenerator;
 use YouduPhp\Youdu\Http\ClientInterface;
+use YouduPhp\Youdu\Packer\PackerInterface;
 
 class Group
 {
-    protected ClientInterface $client;
-
-    public function __construct(protected Config $config)
+    public function __construct(protected Config $config, protected ClientInterface $client, protected PackerInterface $packer, protected UrlGenerator $urlGenerator)
     {
-        $this->client = $config->getClient();
     }
 
     /**
@@ -35,14 +34,14 @@ class Group
             $parameters['userId'] = $userId;
         }
 
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/group/list'), $parameters);
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/group/list'), $parameters);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== ErrorCode::$OK) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
+        $decrypted = $this->packer->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR)['groupList'] ?? [];
     }
@@ -55,12 +54,12 @@ class Group
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->getPacker()->pack(json_encode([
+            'encrypt' => $this->packer->pack(json_encode([
                 'name' => $name,
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/group/create'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/group/create'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -72,7 +71,7 @@ class Group
             throw new Exception($body['errmsg'], $body['errcode']);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($body['encrypt']);
+        $decrypted = $this->packer->unpack($body['encrypt']);
         $decoded = json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
 
         return $decoded['id'];
@@ -83,7 +82,7 @@ class Group
      */
     public function delete(string $groupId): bool
     {
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/group/delete'), ['groupId' => $groupId]);
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/group/delete'), ['groupId' => $groupId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== ErrorCode::$OK) {
@@ -101,13 +100,13 @@ class Group
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->getPacker()->pack(json_encode([
+            'encrypt' => $this->packer->pack(json_encode([
                 'id' => $groupId,
                 'name' => $name,
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/group/update'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/group/update'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -127,14 +126,14 @@ class Group
      */
     public function info(string $groupId): array
     {
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/group/info'), ['id' => $groupId]);
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/group/info'), ['id' => $groupId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== ErrorCode::$OK) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
+        $decrypted = $this->packer->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR) ?? [];
     }
@@ -147,13 +146,13 @@ class Group
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'encrypt' => $this->config->getPacker()->pack(json_encode([
+            'encrypt' => $this->packer->pack(json_encode([
                 'id' => $groupId,
                 'userList' => $members,
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/group/addmember'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/group/addmember'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -174,13 +173,13 @@ class Group
     public function delMember(string $groupId, array $members = []): bool
     {
         $parameters = [
-            'encrypt' => $this->config->getPacker()->pack(json_encode([
+            'encrypt' => $this->packer->pack(json_encode([
                 'id' => $groupId,
                 'userList' => $members,
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $resp = $this->client->post($this->config->getUrlGenerator()->generate('/cgi/group/delmember'), $parameters);
+        $resp = $this->client->post($this->urlGenerator->generate('/cgi/group/delmember'), $parameters);
 
         if ($resp['httpCode'] != 200) {
             throw new Exception('http request code ' . $resp['httpCode'], ErrorCode::$IllegalHttpReq);
@@ -201,14 +200,14 @@ class Group
      */
     public function isMember(string $groupId, $userId): bool
     {
-        $resp = $this->client->get($this->config->getUrlGenerator()->generate('/cgi/group/ismember'), ['id' => $groupId, 'userId' => $userId]);
+        $resp = $this->client->get($this->urlGenerator->generate('/cgi/group/ismember'), ['id' => $groupId, 'userId' => $userId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
 
         if ($decoded['errcode'] !== ErrorCode::$OK) {
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
+        $decrypted = $this->packer->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR)['belong'] ?? false;
     }

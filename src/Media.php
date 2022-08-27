@@ -12,15 +12,14 @@ namespace YouduPhp\Youdu;
 
 use YouduPhp\Youdu\Exception\ErrorCode;
 use YouduPhp\Youdu\Exception\Exception;
+use YouduPhp\Youdu\Generator\UrlGenerator;
 use YouduPhp\Youdu\Http\ClientInterface;
+use YouduPhp\Youdu\Packer\PackerInterface;
 
 class Media
 {
-    protected ClientInterface $client;
-
-    public function __construct(protected Config $config)
+    public function __construct(protected Config $config, protected ClientInterface $client, protected PackerInterface $packer, protected UrlGenerator $urlGenerator)
     {
-        $this->client = $config->getClient();
     }
 
     /**
@@ -51,8 +50,8 @@ class Media
         $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
 
         try {
-            $encryptedFile = $this->config->getPacker()->pack($originalContent);
-            $encryptedMsg = $this->config->getPacker()->pack(json_encode([
+            $encryptedFile = $this->packer->pack($originalContent);
+            $encryptedMsg = $this->packer->pack(json_encode([
                 'type' => $fileType ?? 'file',
                 'name' => basename($file),
             ], JSON_THROW_ON_ERROR));
@@ -71,7 +70,7 @@ class Media
             ];
 
             // 开始上传
-            $url = $this->config->getUrlGenerator()->generate('/cgi/media/upload');
+            $url = $this->urlGenerator->generate('/cgi/media/upload');
             $resp = $this->client->upload($url, $parameters);
 
             // 出错后删除加密文件
@@ -79,7 +78,7 @@ class Media
                 throw new Exception($resp['errmsg'], (int) $resp['errcode']);
             }
 
-            $decrypted = $this->config->getPacker()->unpack($resp['encrypt']);
+            $decrypted = $this->packer->unpack($resp['encrypt']);
             $decoded = json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
 
             if (empty($decoded['mediaId'])) {
@@ -99,7 +98,7 @@ class Media
      */
     public function download(string $mediaId, string $savePath): bool
     {
-        $encrypted = $this->config->getPacker()->pack(json_encode(['mediaId' => $mediaId], JSON_THROW_ON_ERROR));
+        $encrypted = $this->packer->pack(json_encode(['mediaId' => $mediaId], JSON_THROW_ON_ERROR));
 
         $parameters = [
             'buin' => $this->config->getBuin(),
@@ -107,12 +106,12 @@ class Media
             'encrypt' => $encrypted,
         ];
 
-        $url = $this->config->getUrlGenerator()->generate('/cgi/media/get');
+        $url = $this->urlGenerator->generate('/cgi/media/get');
         $resp = $this->client->Post($url, $parameters);
         $header = $this->decodeHeader($resp['header']);
-        $fileInfo = $this->config->getPacker()->unpack($header['Encrypt']);
+        $fileInfo = $this->packer->unpack($header['Encrypt']);
         $fileInfo = json_decode($fileInfo, true, 512, JSON_THROW_ON_ERROR);
-        $fileContent = $this->config->getPacker()->unpack($resp['body']);
+        $fileContent = $this->packer->unpack($resp['body']);
 
         $saveAs = rtrim($savePath, '/') . '/' . $fileInfo['name'];
         $saved = file_put_contents($saveAs, $fileContent);
@@ -129,14 +128,14 @@ class Media
      */
     public function info(string $mediaId = ''): bool
     {
-        $encrypted = $this->config->getPacker()->pack(json_encode(['mediaId' => $mediaId], JSON_THROW_ON_ERROR));
+        $encrypted = $this->packer->pack(json_encode(['mediaId' => $mediaId], JSON_THROW_ON_ERROR));
         $parameters = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
             'encrypt' => $encrypted,
         ];
 
-        $url = $this->config->getUrlGenerator()->generate('/cgi/media/search');
+        $url = $this->urlGenerator->generate('/cgi/media/search');
         $resp = $this->client->Post($url, $parameters);
 
         if ($resp['httpCode'] != 200) {
@@ -155,7 +154,7 @@ class Media
             throw new Exception($decoded['errmsg'], 1);
         }
 
-        $decrypted = $this->config->getPacker()->unpack($decoded['encrypt'] ?? '');
+        $decrypted = $this->packer->unpack($decoded['encrypt'] ?? '');
 
         return json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
     }

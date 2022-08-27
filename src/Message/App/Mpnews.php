@@ -8,16 +8,16 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduPhp\Youdu\Messages\App;
+namespace YouduPhp\Youdu\Message\App;
 
-class Exlink extends AbstractMessage
+class Mpnews extends AbstractMessage
 {
     /**
-     * 外链消息.
+     * 图文消息.
      *
-     * @param Items\Exlink $exlink 消息内容，支持表情，最长不超过600个字符，超出部分将自动截取
+     * @param Items\Mpnews $mpnews 消息内容，支持表情，最长不超过600个字符，超出部分将自动截取
      */
-    public function __construct(protected Items\Exlink $exlink)
+    public function __construct(protected Items\Mpnews $mpnews)
     {
     }
 
@@ -30,8 +30,8 @@ class Exlink extends AbstractMessage
         return [
             'toUser' => $this->toUser,
             'toDept' => $this->toDept,
-            'msgType' => 'exlink',
-            'exlink' => $this->exlink->toArray(),
+            'msgType' => 'mpnews',
+            'mpnews' => $this->mpnews->toArray(),
         ];
     }
 }

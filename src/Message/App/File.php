@@ -8,27 +8,30 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduPhp\Youdu\Messages\Session;
+namespace YouduPhp\Youdu\Message\App;
 
-class Voice extends AbstractMessage
+class File extends AbstractMessage
 {
     /**
-     * 语音消息.
+     * 文件消息.
      *
-     * @param string $mediaId 语音素材文件id。通过上传素材文件接口获取
+     * @param string $mediaId 消息内容，支持表情，最长不超过600个字符，超出部分将自动截取
      */
     public function __construct(protected string $mediaId = '')
     {
     }
 
-    public function toArray(): array
+    /**
+     * 转成 array.
+     * @return array
+     */
+    public function toArray()
     {
         return [
-            'sessionId' => $this->sessionId,
-            'receiver' => $this->receiver,
-            'sender' => $this->sender,
-            'msgType' => 'voice',
-            'voice' => [
+            'toUser' => $this->toUser,
+            'toDept' => $this->toDept,
+            'msgType' => 'file',
+            'file' => [
                 'media_id' => $this->mediaId,
             ],
         ];

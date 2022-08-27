@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduPhp\Youdu\Messages\App;
+namespace YouduPhp\Youdu\Message\App;
 
 class Link extends AbstractMessage
 {

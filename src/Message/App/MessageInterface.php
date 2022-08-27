@@ -8,19 +8,17 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-namespace YouduPhp\Youdu\Messages\Session;
+namespace YouduPhp\Youdu\Message\App;
 
 use JsonSerializable;
 
 interface MessageInterface extends JsonSerializable
 {
-    public function sender(string $sender);
+    public function toUser(string $toUser);
 
-    public function receiver(string $receiver);
+    public function toDept(string $toDept);
 
-    public function session(string $sessionId);
+    public function toArray();
 
-    public function toArray(): array;
-
-    public function toJson($options = 0): string;
+    public function toJson($options = 0);
 }
