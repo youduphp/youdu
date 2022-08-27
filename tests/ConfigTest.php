@@ -22,12 +22,10 @@ beforeEach(function () {
     ], mock(ClientInterface::class)->expect());
 });
 
-test('Test Config', function () {
-    expect($this->config->getApi())->toEqual('http://127.0.0.1:8888');
-    expect($this->config->get('timeout'))->toEqual(5.0);
-    expect($this->config->getBuin())->toEqual(123);
-    expect($this->config->getAppId())->toEqual('app_id');
-    expect($this->config->getAesKey())->toEqual('aes_key');
-    expect($this->config->getClient())->toBeInstanceOf(ClientInterface::class);
-    expect($this->config->getAccessTokenGenerator())->toBeInstanceOf(AccessTokenGenerator::class);
-});
+it('asserts config get api')->expect(fn () => $this->config->getApi())->toEqual('http://127.0.0.1:8888');
+it('asserts config get timeout')->expect(fn () => $this->config->get('timeout'))->toEqual(5.0);
+it('asserts config get buin')->expect(fn () => $this->config->getBuin())->toBeInt()->toEqual(123);
+it('asserts config get app_id')->expect(fn () => $this->config->getAppId())->toEqual('app_id');
+it('asserts config get aes key')->expect(fn () => $this->config->getAesKey())->toEqual('aes_key');
+it('asserts config get client')->expect(fn () => $this->config->getClient())->toBeInstanceOf(ClientInterface::class);
+it('assert config get access token generator')->expect(fn () => $this->config->getAccessTokenGenerator())->toBeInstanceOf(AccessTokenGenerator::class);

@@ -22,10 +22,22 @@ beforeEach(function () {
     $this->app = new App($config);
 });
 
-test('Test App getter', function () {
+it('asserts App::dept() is instanceof ' . Depet::class, function () {
     expect($this->app->dept())->toBeInstanceOf(Dept::class);
+});
+
+it('asserts App::group() is instanceof ' . Group::class, function () {
     expect($this->app->group())->toBeInstanceOf(Group::class);
+});
+
+it('asserts App::media() is instanceof ' . Media::class, function () {
     expect($this->app->media())->toBeInstanceOf(Media::class);
+});
+
+it('asserts App::session() is instanceof ' . Session::class, function () {
     expect($this->app->session())->toBeInstanceOf(Session::class);
+});
+
+it('asserts App::user() is instanceof ' . User::class, function () {
     expect($this->app->user())->toBeInstanceOf(User::class);
 });
