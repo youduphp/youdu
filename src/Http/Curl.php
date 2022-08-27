@@ -19,14 +19,14 @@ class Curl implements ClientInterface
 
     protected string $userAgent;
 
-    protected int $timeout = 5;
+    protected int|float $timeout = 5;
 
     /**
      * construct.
      */
     public function __construct(array $options = [])
     {
-        $this->baseUri = trim($options['base_uri'], '/');
+        $this->baseUri = trim($options['base_uri'] ?? '', '/');
         $this->timeout = $options['timeout'] ?? 5;
         $this->userAgent = 'Youdu/2.0';
     }
