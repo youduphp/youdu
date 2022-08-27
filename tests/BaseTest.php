@@ -12,13 +12,14 @@ use YouduSdk\Youdu\App;
 use YouduSdk\Youdu\Config;
 use YouduSdk\Youdu\Dept;
 use YouduSdk\Youdu\Group;
-use YouduSdk\Youdu\Http\Curl;
+use YouduSdk\Youdu\Http\ClientInterface;
 use YouduSdk\Youdu\Media;
 use YouduSdk\Youdu\Session;
 use YouduSdk\Youdu\User;
 
 beforeEach(function () {
-    $this->app = new App(new Config([]), new Curl(['base_uri' => '', 'timeout' => 5.0]));
+    $config = new Config([], mock(ClientInterface::class)->expect());
+    $this->app = new App($config);
 });
 
 test('Test App getter', function () {
