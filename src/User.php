@@ -24,10 +24,8 @@ class User
 
     /**
      * 获取用户列表.
-     *
-     * @return array
      */
-    public function simpleList(?int $deptId = 0)
+    public function simpleList(?int $deptId = 0): array
     {
         $resp = $this->client->get($this->urlGenerator->generate('/cgi/user/simplelist'), ['deptId' => $deptId]);
         $decoded = json_decode($resp['body'], true, 512, JSON_THROW_ON_ERROR);
@@ -310,8 +308,7 @@ class User
             ];
 
             // 开始上传
-            $url = $this->urlGenerator->generate('/cgi/avatar/set');
-            $resp = $this->client->upload($url, $parameters);
+            $resp = $this->client->upload($this->urlGenerator->generate('/cgi/avatar/set'), $parameters);
 
             if ($resp['errcode'] !== 0) {
                 return false;
