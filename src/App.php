@@ -20,52 +20,11 @@ use YouduPhp\Youdu\Messages\App\Text;
 
 class App
 {
-    protected Dept $dept;
+    protected ClientInterface $client;
 
-    protected Group $group;
-
-    protected Media $media;
-
-    protected Session $session;
-
-    protected User $user;
-
-    public function __construct(protected Config $config, protected ?ClientInterface $client = null)
+    public function __construct(protected Config $config)
     {
-        if ($client && ! $config->getClient()) {
-            $config->setClient($client);
-        }
-
-        $this->dept = new Dept($config);
-        $this->group = new Group($config);
-        $this->media = new Media($config);
-        $this->session = new Session($config);
-        $this->user = new User($config);
-    }
-
-    public function dept(): Dept
-    {
-        return $this->dept;
-    }
-
-    public function group(): Group
-    {
-        return $this->group;
-    }
-
-    public function media(): Media
-    {
-        return $this->media;
-    }
-
-    public function session(): Session
-    {
-        return $this->session;
-    }
-
-    public function user(): User
-    {
-        return $this->user;
+        $this->client = $config->getClient();
     }
 
     /**

@@ -18,23 +18,14 @@ use YouduPhp\Youdu\Packer\PackerInterface;
 
 class Config
 {
-    protected array $config = [];
-
     protected PackerInterface $packer;
 
     protected AccessTokenGenerator $accessTokenGenerator;
 
     protected UrlGenerator $urlGenerator;
 
-    public function __construct(array $config = [], protected ?ClientInterface $client = null)
+    public function __construct(protected array $config = [], protected ?ClientInterface $client = null)
     {
-        $this->config = array_merge([
-            'api' => '',
-            'buin' => 0,
-            'appId' => '',
-            'aes_key' => '',
-            'tmp_path' => '',
-        ], $config);
         $this->packer = new MessagePacker($this);
         $this->accessTokenGenerator = new AccessTokenGenerator($this);
         $this->urlGenerator = new UrlGenerator($this->accessTokenGenerator);
@@ -52,6 +43,11 @@ class Config
     public function getApi(): string
     {
         return $this->get('api', '');
+    }
+
+    public function getTimeout(): int|float
+    {
+        return $this->get('timeout', 5);
     }
 
     public function getBuin(): int

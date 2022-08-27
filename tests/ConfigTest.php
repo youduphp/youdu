@@ -23,7 +23,7 @@ beforeEach(function () {
 });
 
 it('asserts config get api')->expect(fn () => $this->config->getApi())->toEqual('http://127.0.0.1:8888');
-it('asserts config get timeout')->expect(fn () => $this->config->get('timeout'))->toEqual(5.0);
+it('asserts config get timeout')->expect(fn () => $this->config->getTimeout())->toEqual(5.0);
 it('asserts config get buin')->expect(fn () => $this->config->getBuin())->toBeInt()->toEqual(123);
 it('asserts config get app_id')->expect(fn () => $this->config->getAppId())->toEqual('app_id');
 it('asserts config get aes key')->expect(fn () => $this->config->getAesKey())->toEqual('aes_key');
