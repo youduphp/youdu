@@ -11,6 +11,11 @@ declare(strict_types=1);
 use YouduPhp\Youdu\Message\App\MessageInterface;
 use YouduPhp\Youdu\Message\App\Text;
 
-it('assert app messate', function () {
-    expect(new Text('hello'))->toBeInstanceOf(MessageInterface::class);
+it('assert app message', function () {
+    $msg = (new Text('hello'))->toUser('1001');
+    expect($msg)
+        ->toBeInstanceOf(MessageInterface::class);
+    expect($msg->toArray())
+        ->toBeArray()
+        ->toHaveKeys(['toUser', 'msgType', 'text', 'text.content']);
 });

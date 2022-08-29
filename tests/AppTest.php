@@ -12,19 +12,11 @@ use YouduPhp\Youdu\App;
 use YouduPhp\Youdu\Generator\AccessTokenGenerator;
 use YouduPhp\Youdu\Generator\UrlGenerator;
 use YouduPhp\Youdu\Http\ClientInterface;
-use YouduPhp\Youdu\Message\App\Text;
 use YouduPhp\Youdu\Packer\Packer;
 
 beforeEach(function () {
     $config = makeConfig();
-    $client = mock(ClientInterface::class)->expect(
-        // post: function () {
-        //     return [
-        //         'httpCode' => 200,
-        //         'body' => '{"errcode":0,"errmsg":"ok"}',
-        //     ];
-        // }
-    );
+    $client = mock(ClientInterface::class)->expect();
     $packer = new Packer($config);
     $accessTokenGenerator = new AccessTokenGenerator($config, $client, $packer);
     $urlGenerator = new UrlGenerator($accessTokenGenerator);
@@ -32,8 +24,5 @@ beforeEach(function () {
 });
 
 it('asserts send message', function () {
-    // $message = new Text('hello');
-    // $message->toUser('1001');
-    // $this->app->send($message);
-    expect(true)->toBeTrue();
+    expect($this->app)->toBeInstanceOf(App::class);
 });
