@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Util\Packer;
 
-use YouduPhp\Youdu\Kernel\Config;
+use YouduPhp\Youdu\Config;
 use YouduPhp\Youdu\Kernel\Exception\ErrorCode;
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Util\Encipher\Prpcrypt;

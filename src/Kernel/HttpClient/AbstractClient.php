@@ -13,7 +13,7 @@ namespace YouduPhp\Youdu\Kernel\HttpClient;
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
-use YouduPhp\Youdu\Kernel\Config;
+use YouduPhp\Youdu\Config;
 use YouduPhp\Youdu\Kernel\Exception\AccessTokenDoesNotExistException;
 use YouduPhp\Youdu\Kernel\Util\Packer\Packer;
 use YouduPhp\Youdu\Kernel\Util\Packer\PackerInterface;
