@@ -35,11 +35,22 @@ abstract class AbstractClient
         return $this->buildResponse(
             $this->client->request('GET', $uri, [
                 'query' => $this->preformatQuery($query),
+                'base_uri' => $this->config->getApi(),
             ])
         );
     }
 
     protected function httpPost(string $uri, array $data = []): Response
+    {
+        return $this->buildResponse(
+            $this->client->request('POST', $uri, [
+                'form_params' => $this->preformatParams($data),
+                'query' => $this->preformatQuery(),
+            ])
+        );
+    }
+
+    protected function httpPostJson(string $uri, array $data = []): Response
     {
         return $this->buildResponse(
             $this->client->request('POST', $uri, [

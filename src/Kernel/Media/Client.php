@@ -56,7 +56,7 @@ class Client extends AbstractClient
     public function download(string $mediaId, string $savePath): bool
     {
         $parameters = ['mediaId' => $mediaId];
-        $response = $this->httpPost('/cgi/media/get', $parameters);
+        $response = $this->httpPostJson('/cgi/media/get', $parameters);
 
         $fileInfo = $this->packer->unpack($response->getHeaderLine('Encrypt'));
         $fileInfo = json_decode($fileInfo, true, 512, JSON_THROW_ON_ERROR);
@@ -79,6 +79,6 @@ class Client extends AbstractClient
     {
         $parameters = ['mediaId' => $mediaId];
 
-        return $this->httpPost('/cgi/media/search', $parameters)->throw()->json();
+        return $this->httpPostJson('/cgi/media/search', $parameters)->throw()->json();
     }
 }

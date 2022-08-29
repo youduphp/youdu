@@ -41,7 +41,7 @@ class Client extends AbstractClient
             'member' => $member,
         ];
 
-        return $this->httpPost('/cgi/session/create', $parameters)->throw()->json();
+        return $this->httpPostJson('/cgi/session/create', $parameters)->throw()->json();
     }
 
     /**
@@ -66,7 +66,7 @@ class Client extends AbstractClient
             'delMember' => $delMember,
         ];
 
-        return $this->httpPost('/cgi/session/update', $parameters)->throw()->json();
+        return $this->httpPostJson('/cgi/session/update', $parameters)->throw()->json();
     }
 
     /**
@@ -84,7 +84,7 @@ class Client extends AbstractClient
      */
     public function send(MessageInterface $message): bool
     {
-        $this->httpPost('/cgi/session/send', $message->toArray())->throw();
+        $this->httpPostJson('/cgi/session/send', $message->toArray())->throw();
 
         return true;
     }

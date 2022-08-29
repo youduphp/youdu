@@ -38,7 +38,7 @@ class Client extends AbstractClient
             'name' => $name,
         ];
 
-        return $this->httpPost('/cgi/group/create', $parameters)->json('id');
+        return $this->httpPostJson('/cgi/group/create', $parameters)->json('id');
     }
 
     /**
@@ -61,7 +61,7 @@ class Client extends AbstractClient
             'name' => $name,
         ];
 
-        $this->httpPost('/cgi/group/update', $parameters)->throw();
+        $this->httpPostJson('/cgi/group/update', $parameters)->throw();
 
         return true;
     }
@@ -84,7 +84,7 @@ class Client extends AbstractClient
             'userList' => $members,
         ];
 
-        $this->httpPost('/cgi/group/addmember', $parameters)->throw();
+        $this->httpPostJson('/cgi/group/addmember', $parameters)->throw();
 
         return true;
     }
@@ -99,7 +99,7 @@ class Client extends AbstractClient
             'userList' => $members,
         ];
 
-        $this->httpPost('/cgi/group/delmember', $parameters)->throw();
+        $this->httpPostJson('/cgi/group/delmember', $parameters)->throw();
 
         return true;
     }

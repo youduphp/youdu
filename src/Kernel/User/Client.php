@@ -54,7 +54,7 @@ class Client extends AbstractClient
             'dept' => $dept,
         ];
 
-        $this->httpPost('/cgi/user/create', $parameters)->throw();
+        $this->httpPostJson('/cgi/user/create', $parameters)->throw();
 
         return true;
     }
@@ -82,7 +82,7 @@ class Client extends AbstractClient
             'dept' => $dept,
         ];
 
-        $this->httpPost('/cgi/user/update', $parameters)->throw();
+        $this->httpPostJson('/cgi/user/update', $parameters)->throw();
 
         return true;
     }
@@ -106,7 +106,7 @@ class Client extends AbstractClient
             'sortId' => $sortId,
         ];
 
-        $this->httpPost('/cgi/user/positionupdate', $parameters)->throw();
+        $this->httpPostJson('/cgi/user/positionupdate', $parameters)->throw();
 
         return true;
     }
@@ -122,7 +122,7 @@ class Client extends AbstractClient
                 'delList' => $userId,
             ];
 
-            $this->httpPost('/cgi/user/batchdelete', $parameters)->throw();
+            $this->httpPostJson('/cgi/user/batchdelete', $parameters)->throw();
 
             return true;
         }
@@ -156,7 +156,7 @@ class Client extends AbstractClient
             'passwd' => md5($passwd),
         ];
 
-        $this->httpPost('/cgi/user/setauth', $parameters)->throw();
+        $this->httpPostJson('/cgi/user/setauth', $parameters)->throw();
 
         return true;
     }

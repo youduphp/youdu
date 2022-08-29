@@ -24,7 +24,7 @@ class Client extends AbstractClient
      */
     public function send(MessageInterface $message): bool
     {
-        $this->httpPost('/cgi/msg/send', $message->toArray())->throw();
+        $this->httpPostJson('/cgi/msg/send', $message->toArray())->throw();
 
         return true;
     }
@@ -95,7 +95,7 @@ class Client extends AbstractClient
             ], JSON_THROW_ON_ERROR)),
         ];
 
-        $this->httpPost('/cgi/set.ent.notice', $parameters)->throw();
+        $this->httpPostJson('/cgi/set.ent.notice', $parameters)->throw();
 
         return true;
     }
@@ -118,7 +118,7 @@ class Client extends AbstractClient
             'msg_encrypt' => $this->packer->pack($message->toJson()),
         ];
 
-        $this->httpPost('/cgi/popwindow', $parameters)->throw();
+        $this->httpPostJson('/cgi/popwindow', $parameters)->throw();
 
         return true;
     }
