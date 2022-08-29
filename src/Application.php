@@ -15,12 +15,12 @@ use YouduPhp\Youdu\Kernel\Config;
 use YouduPhp\Youdu\Kernel\Exception\InvalidArgumentException;
 
 /**
- * @property \YouduPhp\Youdu\Kernel\Dept\Client $dept
- * @property \YouduPhp\Youdu\Kernel\Message\Client $message
- * @property \YouduPhp\Youdu\Kernel\User\Client $user
- * @property \YouduPhp\Youdu\Kernel\Session\Client $session
- * @property \YouduPhp\Youdu\Kernel\Media\Client $media
- * @property \YouduPhp\Youdu\Kernel\Group\Client $group
+ * @property Kernel\Dept\Client $dept
+ * @property Kernel\Message\Client $message
+ * @property Kernel\User\Client $user
+ * @property Kernel\Session\Client $session
+ * @property Kernel\Media\Client $media
+ * @property Kernel\Group\Client $group
  */
 class Application
 {
