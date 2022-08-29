@@ -16,42 +16,33 @@ class Config
     {
     }
 
-    public function get(string $key = null, $default = null)
-    {
-        if (is_null($key)) {
-            return $this->config;
-        }
-
-        return $this->config[$key] ?? $default;
-    }
-
     public function getApi(): string
     {
-        return $this->get('api', '');
+        return $this->config['api'] ?? '';
     }
 
     public function getTimeout(): int|float
     {
-        return $this->get('timeout', 5);
+        return $this->config['timeout'] ?? 5;
     }
 
     public function getBuin(): int
     {
-        return (int) $this->get('buin', 0);
+        return (int) $this->config['buin'] ?? 0;
     }
 
     public function getAppId(): string
     {
-        return $this->get('app_id', '');
+        return $this->config['app_id'] ?? '';
     }
 
     public function getAesKey(): string
     {
-        return $this->get('aes_key', '');
+        return $this->config['aes_key'] ?? '';
     }
 
     public function getTmpPath(): string
     {
-        return $this->get('tmp_path', '/tmp');
+        return $this->config['tmp_path'] ?? '/tmp';
     }
 }
