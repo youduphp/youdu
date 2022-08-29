@@ -167,26 +167,13 @@ class Client extends AbstractClient
      */
     public function setAvatar($userId, string $file): bool
     {
-        if (preg_match('/^https?:\/\//i', $file)) { // 远程文件
-            $contextOptions = stream_context_create([
-                'ssl' => [
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                ],
-            ]);
-
-            $originalContent = file_get_contents($file, false, $contextOptions);
-        } else { // 本地文件
-            $originalContent = file_get_contents($file);
-        }
-
         // 加密文件
         $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
+        $packedContents = $this->fileGetContents($file);
 
         try {
             // 保存加密文件
-            $encryptedFile = $this->packer->pack($originalContent);
-            if (file_put_contents($tmpFile, $encryptedFile) === false) {
+            if (file_put_contents($tmpFile, $packedContents) === false) {
                 throw new LogicException('Create tmpfile failed', 1);
             }
 
@@ -220,6 +207,6 @@ class Client extends AbstractClient
      */
     public function identify(string $token): array
     {
-        return $this->httpGet('/cgi/identify?token=' . $token)->throw()->json('userInfo', []);
+        return $this->httpGet('/cgi/identify', ['token' => $token])->throw()->json('userInfo', []);
     }
 }

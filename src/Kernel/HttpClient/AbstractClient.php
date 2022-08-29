@@ -15,8 +15,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
 use YouduPhp\Youdu\Config;
 use YouduPhp\Youdu\Kernel\Exception\AccessTokenDoesNotExistException;
+use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Util\Packer\PackerInterface;
-
 use function YouduPhp\Youdu\Kernel\Util\tap;
 
 abstract class AbstractClient
@@ -151,5 +151,27 @@ abstract class AbstractClient
     protected function makeUploadFile(string $file)
     {
         return fopen($file, 'r');
+    }
+
+    protected function fileGetContents(string $file, bool $pack = true): string
+    {
+        if (preg_match('/^https?:\/\//i', $file)) { // 远程文件
+            $contextOptions = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+
+            $contents = file_get_contents($file, false, $contextOptions);
+        } else { // 本地文件
+            $contents = file_get_contents($file);
+        }
+
+        if ($contents === false) {
+            throw new LogicException(sprintf('Read file %s failed', $file), 1);
+        }
+
+        return $pack ? $this->packer->pack($contents) : $contents;
     }
 }
