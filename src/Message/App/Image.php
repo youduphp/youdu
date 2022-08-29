@@ -23,9 +23,8 @@ class Image extends AbstractMessage
 
     /**
      * 转成 array.
-     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'toUser' => $this->toUser,

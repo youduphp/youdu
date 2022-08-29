@@ -18,19 +18,25 @@ abstract class AbstractMessage implements MessageInterface
 
     protected ?string $sessionId = null;
 
-    public function sender(string $sender)
+    public function sender(string $sender): self
     {
         $this->sender = $sender;
+
+        return $this;
     }
 
-    public function receiver(string $receiver)
+    public function receiver(string $receiver): self
     {
         $this->receiver = $receiver;
+
+        return $this;
     }
 
-    public function session(string $sessionId)
+    public function session(string $sessionId): self
     {
         $this->sessionId = $sessionId;
+
+        return $this;
     }
 
     public function toJson($options = JSON_UNESCAPED_UNICODE): string
@@ -38,7 +44,7 @@ abstract class AbstractMessage implements MessageInterface
         return json_encode($this->jsonSerialize(), $options);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $data = $this->toArray();
 

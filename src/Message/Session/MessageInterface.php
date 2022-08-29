@@ -14,11 +14,11 @@ use JsonSerializable;
 
 interface MessageInterface extends JsonSerializable
 {
-    public function sender(string $sender);
+    public function sender(string $sender): self;
 
-    public function receiver(string $receiver);
+    public function receiver(string $receiver): self;
 
-    public function session(string $sessionId);
+    public function session(string $sessionId): self;
 
     public function toArray(): array;
 

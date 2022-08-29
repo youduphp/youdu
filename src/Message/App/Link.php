@@ -12,7 +12,7 @@ namespace YouduPhp\Youdu\Message\App;
 
 class Link extends AbstractMessage
 {
-    protected $link;
+    protected array $link;
 
     /**
      * 隐式链接.
@@ -32,9 +32,8 @@ class Link extends AbstractMessage
 
     /**
      * 转成 array.
-     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'toUser' => $this->toUser,

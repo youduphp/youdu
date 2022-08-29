@@ -19,21 +19,25 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * 发送至用户.
      */
-    public function toUser(string $toUser)
+    public function toUser(string $toUser): self
     {
         // 兼容用,隔开
         $toUser = strtr($toUser, ',', '|');
         $this->toUser = $toUser;
+
+        return $this;
     }
 
     /**
      * 发送至部门.
      */
-    public function toDept(string $toDept)
+    public function toDept(string $toDept): self
     {
         // 兼容用,隔开
         $toDept = strtr($toDept, ',', '|');
         $this->toDept = $toDept;
+
+        return $this;
     }
 
     /**
@@ -48,9 +52,8 @@ abstract class AbstractMessage implements MessageInterface
 
     /**
      * json 序列化.
-     * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $data = $this->toArray();
 

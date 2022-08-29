@@ -22,7 +22,7 @@ use YouduPhp\Youdu\Packer\PackerInterface;
 
 class App
 {
-    public function __construct(protected Config $config, protected ?ClientInterface $client = null, protected PackerInterface $packer, protected UrlGenerator $urlGenerator)
+    public function __construct(protected Config $config, protected ClientInterface $client, protected PackerInterface $packer, protected UrlGenerator $urlGenerator)
     {
     }
 

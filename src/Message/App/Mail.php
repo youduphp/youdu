@@ -23,15 +23,20 @@ class Mail extends AbstractMessage
      * @param string $link 邮件链接。action为new时有效，点此链接即可打开邮件，为空时点击邮件消息默认执行企业邮箱单点登录
      * @param string $unreadCount 未读邮件数。action为unread时有效
      */
-    public function __construct(protected string $action = '', protected string $subject = '', protected string $fromUser = '', protected string $fromEmail = '', protected string $link = '', protected int $unreadCount = 0)
-    {
+    public function __construct(
+        protected string $action = '',
+        protected string $subject = '',
+        protected string $fromUser = '',
+        protected string $fromEmail = '',
+        protected string $link = '',
+        protected int $unreadCount = 0
+    ) {
     }
 
     /**
      * 转成 array.
-     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'toUser' => $this->toUser,

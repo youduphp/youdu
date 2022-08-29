@@ -33,9 +33,8 @@ class SysMsg extends AbstractMessage
 
     /**
      * 转成 array.
-     * @return (string|array)[]
      */
-    public function toArray()
+    public function toArray(): array
     {
         $data = [
             'msgType' => 'sysMsg',

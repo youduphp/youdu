@@ -12,10 +12,7 @@ namespace YouduPhp\Youdu\Message\App;
 
 class PopWindow extends AbstractMessage
 {
-    /**
-     * @var string
-     */
-    protected $content;
+    protected string $content;
 
     /**
      * 应用弹窗.
@@ -30,15 +27,23 @@ class PopWindow extends AbstractMessage
      * @param string $noticeId 通知id，用于防止重复弹窗
      * @param int $pop_mode 打开方式。1 浏览器, 2 窗口, 其他采用应用默认配置
      */
-    public function __construct(protected string $url = '', protected string $tip = '', protected string $title = '', protected int $width = 400, protected int $height = 300, protected int $duration = 5, protected int $position = 3, protected string $noticeId = '', protected int $popMode = 1)
-    {
+    public function __construct(
+        protected string $url = '',
+        protected string $tip = '',
+        protected string $title = '',
+        protected int $width = 400,
+        protected int $height = 300,
+        protected int $duration = 5,
+        protected int $position = 3,
+        protected string $noticeId = '',
+        protected int $popMode = 1
+    ) {
     }
 
     /**
      * 转成 array.
-     * @return (string|array)[]
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'toUser' => $this->toUser,
