@@ -97,6 +97,7 @@ class BaseClient
     protected function preformatQuery(array $query = []): array
     {
         $query['accessToken'] = $this->getAccessToken();
+
         return $query;
     }
 

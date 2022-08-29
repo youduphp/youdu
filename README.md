@@ -13,3 +13,23 @@ The php sdk of youdu.
 ```shell
 composer require youduphp/youdu
 ```
+
+## Usage
+
+```php
+use YouduPhp\Youdu\Application;
+use YouduPhp\Youdu\Kernel\Config;
+use YouduPhp\Youdu\Kernel\Message\App\Text;
+
+$config = new Config([
+    'api' => 'http://10.0.0.188:7080',
+    'buin' => 56565656,
+    'app_id' => 'yd06AB76EC519B4130A802224B4C60F689',
+    'aes_key' => 'A0aWSqDL5SV4fafQl3OavoVPUn6sx7xNnD+1hOoTeWk=',
+]);
+
+$app = new Application($config);
+$msg = (new Text('hello world'))->toUser(10001);
+
+$app->message->send($msg);
+```

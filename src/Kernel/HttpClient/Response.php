@@ -17,6 +17,9 @@ use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Exception\RequestException;
 use YouduPhp\Youdu\Kernel\Util\Packer\PackerInterface;
 
+use function YouduPhp\Youdu\Kernel\Util\tap;
+use function YouduPhp\Youdu\Kernel\Util\with;
+
 /**
  * @mixin \GuzzleHttp\Psr7\Response
  */
@@ -95,11 +98,7 @@ class Response implements ArrayAccess
 
     public function body($decrypt = false): string
     {
-        if ($decrypt) {
-            return $this->packer->unpack($this->body);
-        }
-
-        return $this->body;
+        return (string) with($this->body, fn ($body) => $decrypt ? $this->packer->unpack($this->body) : $body);
     }
 
     public function headers(): array
@@ -129,14 +128,14 @@ class Response implements ArrayAccess
 
     public function throw(bool $onlyCheckHttpStatusCode = false): self
     {
-        if ($this->status() != 200) {
-            throw new RequestException('HTTP status code ' . $this->status(), ErrorCode::$IllegalHttpReq);
-        }
+        return tap($this, function () use ($onlyCheckHttpStatusCode) {
+            if ($this->status() != 200) {
+                throw new RequestException('HTTP status code ' . $this->status(), ErrorCode::$IllegalHttpReq);
+            }
 
-        if (! $onlyCheckHttpStatusCode && $this->getErrCode() !== ErrorCode::$OK) {
-            throw new LogicException($this->getErrMsg(), $this->getErrCode());
-        }
-
-        return $this;
+            if (! $onlyCheckHttpStatusCode && $this->getErrCode() !== ErrorCode::$OK) {
+                throw new LogicException($this->getErrMsg(), $this->getErrCode());
+            }
+        });
     }
 }
