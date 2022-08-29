@@ -8,20 +8,11 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-use YouduPhp\Youdu\Config;
-
 beforeEach(function () {
-    $this->config = new Config([
-        'api' => 'http://127.0.0.1:8888',
-        'timeout' => 5.0,
-        'buin' => 123,
-        'app_id' => 'app_id',
-        'aes_key' => 'aes_key',
-    ]);
+    $this->config = makeConfig();
 });
 
-it('asserts config get api')->expect(fn () => $this->config->getApi())->toEqual('http://127.0.0.1:8888');
-it('asserts config get timeout')->expect(fn () => $this->config->getTimeout())->toEqual(5.0);
-it('asserts config get buin')->expect(fn () => $this->config->getBuin())->toBeInt()->toEqual(123);
-it('asserts config get app_id')->expect(fn () => $this->config->getAppId())->toEqual('app_id');
-it('asserts config get aes key')->expect(fn () => $this->config->getAesKey())->toEqual('aes_key');
+it('asserts config.api')->expect(fn () => $this->config->getApi())->toEqual(getenv('YOUDU_API'));
+it('asserts config.buin')->expect(fn () => $this->config->getBuin())->toBeInt()->toEqual(getenv('YOUDU_BUIN'));
+it('asserts config.app_id')->expect(fn () => $this->config->getAppId())->toEqual(getenv('YOUDU_DEFAULT_APP_ID'));
+it('asserts config.aes_key')->expect(fn () => $this->config->getAesKey())->toEqual(getenv('YOUDU_DEFAULT_AES_KEY'));

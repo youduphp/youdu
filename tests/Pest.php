@@ -8,6 +8,8 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
+use YouduPhp\Youdu\Config;
+
 // uses(Tests\TestCase::class)->in('Feature');
 
 /*
@@ -25,18 +27,12 @@ expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
 
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
-*/
-
-function something()
+function makeConfig(): Config
 {
-    // ..
+    return new Config([
+        'api' => getenv('YOUDU_API'),
+        'buin' => getenv('YOUDU_BUIN'),
+        'app_id' => getenv('YOUDU_DEFAULT_APP_ID'),
+        'aes_key' => getenv('YOUDU_DEFAULT_AES_KEY'),
+    ]);
 }
