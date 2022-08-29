@@ -10,6 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use YouduPhp\Youdu\Kernel\Config;
 use YouduPhp\Youdu\Kernel\Exception\InvalidArgumentException;
@@ -26,8 +27,12 @@ class Application
 {
     private array $container = [];
 
-    public function __construct(protected Config $config, private ClientInterface $client)
+    public function __construct(protected Config $config, private ?ClientInterface $client = null)
     {
+        $this->client = $client ?? new Client([
+            'base_uri' => $config->getApi(),
+            'timeout' => $config->getTimeout(),
+        ]);
     }
 
     public function __get($name)
