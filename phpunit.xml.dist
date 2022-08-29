@@ -17,9 +17,9 @@
     </coverage>
     <php>
         <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF" />
-        <env name="YOUDU_API" value="" />
-        <env name="YOUDU_BUIN" value="" />
-        <env name="YOUDU_DEFAULT_APP_ID" value="" />
-        <env name="YOUDU_DEFAULT_AES_KEY" value="" />
+        <env name="YOUDU_API" value="http://10.0.0.188:7080" />
+        <env name="YOUDU_BUIN" value="56565656" />
+        <env name="YOUDU_DEFAULT_APP_ID" value="yd06AB76EC519B4130A802224B4C60F689" />
+        <env name="YOUDU_DEFAULT_AES_KEY" value="A0aWSqDL5SV4fafQl3OavoVPUn6sx7xNnD+1hOoTeWk=" />
     </php>
 </phpunit>
