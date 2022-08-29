@@ -13,16 +13,15 @@ namespace YouduPhp\Youdu;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Psr\SimpleCache\CacheInterface;
-use YouduPhp\Youdu\Kernel\Config;
 use YouduPhp\Youdu\Kernel\Exception\InvalidArgumentException;
 
 /**
- * @property Kernel\Dept\Client $dept
- * @property Kernel\Message\Client $message
- * @property Kernel\User\Client $user
- * @property Kernel\Session\Client $session
- * @property Kernel\Media\Client $media
- * @property Kernel\Group\Client $group
+ * @method Kernel\Dept\Client dept()
+ * @method Kernel\Message\Client message()
+ * @method Kernel\User\Client user()
+ * @method Kernel\Session\Client session()
+ * @method Kernel\Media\Client media()
+ * @method Kernel\Group\Client group()
  */
 class Application
 {
@@ -36,7 +35,7 @@ class Application
         ]);
     }
 
-    public function __get($name)
+    public function __call($name, $arguments)
     {
         if (isset($this->container[$name])) {
             return $this->container[$name];

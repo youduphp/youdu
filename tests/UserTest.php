@@ -12,7 +12,7 @@ use YouduPhp\Youdu\Application;
 
 beforeEach(function () {
     $config = makeConfig();
-    $this->user = (new Application($config))->user;
+    $this->user = (new Application($config))->user();
 });
 
 it('assert get user info', function () {

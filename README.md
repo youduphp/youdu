@@ -18,7 +18,7 @@ composer require youduphp/youdu
 
 ```php
 use YouduPhp\Youdu\Application;
-use YouduPhp\Youdu\Kernel\Config;
+use YouduPhp\Youdu\Config;
 use YouduPhp\Youdu\Kernel\Message\App\Text;
 
 $config = new Config([
@@ -31,5 +31,5 @@ $config = new Config([
 $app = new Application($config);
 $msg = (new Text('hello world'))->toUser(10001);
 
-$app->message->send($msg);
+$app->message()->send($msg);
 ```

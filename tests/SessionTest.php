@@ -12,7 +12,7 @@ use YouduPhp\Youdu\Application;
 
 beforeEach(function () {
     $config = makeConfig();
-    $this->session = (new Application($config))->session;
+    $this->session = (new Application($config))->session();
 });
 
 it('assert get session info', function () {
