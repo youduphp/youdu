@@ -17,6 +17,7 @@ use YouduPhp\Youdu\Config;
 use YouduPhp\Youdu\Kernel\Exception\AccessTokenDoesNotExistException;
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Util\Packer\PackerInterface;
+
 use function YouduPhp\Youdu\Kernel\Util\tap;
 
 abstract class AbstractClient
@@ -29,7 +30,7 @@ abstract class AbstractClient
     ) {
     }
 
-    public function httpGet(string $uri, array $query = []): Response
+    protected function httpGet(string $uri, array $query = []): Response
     {
         return $this->buildResponse(
             $this->client->request('GET', $uri, [
@@ -38,7 +39,7 @@ abstract class AbstractClient
         );
     }
 
-    public function httpPost(string $uri, array $data = []): Response
+    protected function httpPost(string $uri, array $data = []): Response
     {
         return $this->buildResponse(
             $this->client->request('POST', $uri, [
@@ -48,7 +49,7 @@ abstract class AbstractClient
         );
     }
 
-    public function httpUpload(string $uri, string $file, array $data = []): Response
+    protected function httpUpload(string $uri, string $file, array $data = []): Response
     {
         return $this->buildResponse(
             $this->client->request('POST', $uri, [
@@ -58,7 +59,7 @@ abstract class AbstractClient
         );
     }
 
-    public function preformatUploadFileParams(string $file, array $params = []): array
+    protected function preformatUploadFileParams(string $file, array $params = []): array
     {
         $array = [
             'buin' => $this->config->getBuin(),
