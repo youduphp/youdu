@@ -12,7 +12,7 @@ use YouduPhp\Youdu\Application;
 
 beforeEach(function () {
     $config = makeConfig();
-    $this->dept = (new Application($config))->dept;
+    $this->dept = (new Application($config))->dept();
 });
 
 it('asserts dept', function () {

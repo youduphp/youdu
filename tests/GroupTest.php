@@ -12,7 +12,7 @@ use YouduPhp\Youdu\Application;
 
 beforeEach(function () {
     $config = makeConfig();
-    $this->group = (new Application($config))->group;
+    $this->group = (new Application($config))->group();
 });
 
 it('assert get group info', function () {

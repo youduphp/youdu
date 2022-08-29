@@ -12,7 +12,7 @@ use YouduPhp\Youdu\Application;
 
 beforeEach(function () {
     $config = makeConfig();
-    $this->media = (new Application($config))->media;
+    $this->media = (new Application($config))->media();
 });
 
 it('assert get media info', function () {

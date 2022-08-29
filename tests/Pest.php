@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-use YouduPhp\Youdu\Kernel\Config;
+use YouduPhp\Youdu\Config;
 
 // uses(Tests\TestCase::class)->in('Feature');
 
