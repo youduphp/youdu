@@ -12,6 +12,7 @@ namespace YouduPhp\Youdu\Kernel\HttpClient;
 
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\SimpleCache\CacheInterface;
 use YouduPhp\Youdu\Kernel\Config;
 use YouduPhp\Youdu\Kernel\Exception\AccessTokenDoesNotExistException;
 use YouduPhp\Youdu\Kernel\Util\Packer\Packer;
@@ -21,7 +22,7 @@ class BaseClient
 {
     protected PackerInterface $packer;
 
-    public function __construct(protected ClientInterface $client, protected Config $config)
+    public function __construct(protected Config $config, protected ClientInterface $client, protected ?CacheInterface $cache = null)
     {
         $this->packer = new Packer($config);
     }
@@ -107,6 +108,16 @@ class BaseClient
             'encrypt' => $this->packer->pack((string) time()),
         ];
 
+        $cacheKey = sprintf(
+            '%s:%s:access_token',
+            $this->config->getBuin(),
+            $this->config->getAppId()
+        );
+
+        if ($accessToken = $this->cache?->get($cacheKey)) {
+            return $accessToken;
+        }
+
         $response = $this->buildResponse(
             $this->client->request('POST', '/cgi/gettoken', ['json' => $parameters])
         )->throw();
@@ -115,7 +126,11 @@ class BaseClient
             throw new AccessTokenDoesNotExistException('Get access token failed.');
         }
 
-        return $response->json('accessToken', '');
+        $accessToken = $response->json('accessToken', '');
+
+        $this->cache?->set($cacheKey, $accessToken, (int) ($response->json('expireIn', 7200) - 60));
+
+        return $accessToken;
     }
 
     protected function buildResponse(ResponseInterface $response): Response

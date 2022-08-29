@@ -12,6 +12,7 @@ namespace YouduPhp\Youdu;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use Psr\SimpleCache\CacheInterface;
 use YouduPhp\Youdu\Kernel\Config;
 use YouduPhp\Youdu\Kernel\Exception\InvalidArgumentException;
 
@@ -27,7 +28,7 @@ class Application
 {
     private array $container = [];
 
-    public function __construct(protected Config $config, private ?ClientInterface $client = null)
+    public function __construct(protected Config $config, private ?ClientInterface $client = null, protected ?CacheInterface $cache = null)
     {
         $this->client = $client ?? new Client([
             'base_uri' => $config->getApi(),
@@ -47,6 +48,6 @@ class Application
             throw new InvalidArgumentException(sprintf('Class "%s" not found', $class));
         }
 
-        return $this->container[$name] = new $class($this->client, $this->config);
+        return $this->container[$name] = new $class($this->config, $this->client, $this->cache);
     }
 }
