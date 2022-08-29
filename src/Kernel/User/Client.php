@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace YouduPhp\Youdu\Kernel\User;
 
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
-use YouduPhp\Youdu\Kernel\HttpClient\BaseClient;
+use YouduPhp\Youdu\Kernel\HttpClient\AbstractClient;
 
-class Client extends BaseClient
+class Client extends AbstractClient
 {
     /**
      * 获取用户列表.

@@ -18,7 +18,9 @@ use YouduPhp\Youdu\Kernel\Exception\AccessTokenDoesNotExistException;
 use YouduPhp\Youdu\Kernel\Util\Packer\Packer;
 use YouduPhp\Youdu\Kernel\Util\Packer\PackerInterface;
 
-class BaseClient
+use function YouduPhp\Youdu\Kernel\Util\tap;
+
+abstract class AbstractClient
 {
     protected PackerInterface $packer;
 
@@ -103,12 +105,6 @@ class BaseClient
 
     protected function getAccessToken(): string
     {
-        $parameters = [
-            'buin' => $this->config->getBuin(),
-            'appId' => $this->config->getAppId(),
-            'encrypt' => $this->packer->pack((string) time()),
-        ];
-
         $cacheKey = sprintf(
             '%s:%s:access_token',
             $this->config->getBuin(),
@@ -119,19 +115,27 @@ class BaseClient
             return $accessToken;
         }
 
+        $parameters = [
+            'buin' => $this->config->getBuin(),
+            'appId' => $this->config->getAppId(),
+            'encrypt' => $this->packer->pack((string) time()),
+        ];
+
         $response = $this->buildResponse(
             $this->client->request('POST', '/cgi/gettoken', ['json' => $parameters])
         )->throw();
+        $ttl = (int) ($response->json('expireIn', 7200) - 60);
 
-        if (! $response->json('accessToken', '')) {
-            throw new AccessTokenDoesNotExistException('Get access token failed.');
-        }
+        return tap(
+            $response->json('accessToken', ''),
+            function ($accessToken) use ($cacheKey, $ttl) {
+                if (! $accessToken) {
+                    throw new AccessTokenDoesNotExistException('Get access token failed.');
+                }
 
-        $accessToken = $response->json('accessToken', '');
-
-        $this->cache?->set($cacheKey, $accessToken, (int) ($response->json('expireIn', 7200) - 60));
-
-        return $accessToken;
+                $this->cache?->set($cacheKey, $accessToken, $ttl);
+            }
+        );
     }
 
     protected function buildResponse(ResponseInterface $response): Response

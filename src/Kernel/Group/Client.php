@@ -10,9 +10,9 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Group;
 
-use YouduPhp\Youdu\Kernel\HttpClient\BaseClient;
+use YouduPhp\Youdu\Kernel\HttpClient\AbstractClient;
 
-class Client extends BaseClient
+class Client extends AbstractClient
 {
     /**
      * 获取群列表.
