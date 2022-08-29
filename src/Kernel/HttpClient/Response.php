@@ -30,14 +30,17 @@ class Response implements ArrayAccess
 
     private array $json = [];
 
-    public function __construct(private ResponseInterface $response, protected PackerInterface $packer)
+    public function __construct(protected ResponseInterface $response, protected PackerInterface $packer)
     {
-        $data = json_decode($this->response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $data = json_decode((string) $response->getBody(), true);
 
-        $this->errCode = (int) $data['errcode'] ?? -1;
-        $this->errMsg = (string) $data['errmsg'] ?? '';
-        $this->body = $this->packer->unpack($data['encrypt'] ?? '');
-        $this->json = (array) json_decode($this->body, true, 512, JSON_THROW_ON_ERROR);
+        $this->errCode = (int) ($data['errcode'] ?? -1);
+        $this->errMsg = (string) ($data['errmsg'] ?? '');
+
+        if ($encrypt = $data['encrypt'] ?? '') {
+            $this->body = $this->packer->unpack($encrypt);
+            $this->json = (array) json_decode($this->body, true);
+        }
     }
 
     public function __call($name, $arguments)

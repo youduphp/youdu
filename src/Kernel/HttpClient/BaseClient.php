@@ -12,7 +12,6 @@ namespace YouduPhp\Youdu\Kernel\HttpClient;
 
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
-use RuntimeException;
 use YouduPhp\Youdu\Kernel\Config;
 use YouduPhp\Youdu\Kernel\Exception\AccessTokenDoesNotExistException;
 use YouduPhp\Youdu\Kernel\Util\Packer\Packer;
@@ -40,7 +39,7 @@ class BaseClient
     {
         return $this->buildResponse(
             $this->client->request('POST', $uri, [
-                'form_params' => $this->preformatParams($data),
+                'json' => $this->preformatParams($data),
                 'query' => $this->preformatQuery(),
             ])
         );
@@ -84,21 +83,14 @@ class BaseClient
         ];
 
         $response = $this->buildResponse(
-            $this->client->request('POST', '/cgi/gettoken', $parameters)
-        );
+            $this->client->request('POST', '/cgi/gettoken', ['json' => $parameters])
+        )->throw();
 
-        if ($response->json('errcode') != 0) {
-            throw new RuntimeException($response->json('errmsg'), $response->json('errcode'));
-        }
-
-        $decrypted = $this->packer->unpack($response->json('encrypt'));
-        $decoded = json_decode($decrypted, true);
-
-        if (empty($decoded['accessToken'])) {
+        if (! $response->json('accessToken', '')) {
             throw new AccessTokenDoesNotExistException('Get access token failed.');
         }
 
-        return $decoded['accessToken'];
+        return $response->json('accessToken', '');
     }
 
     protected function buildResponse(ResponseInterface $response): Response
