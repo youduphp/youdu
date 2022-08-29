@@ -30,16 +30,23 @@ class Response implements ArrayAccess
 
     private array $json = [];
 
+    private int $statusCode = 200;
+
     public function __construct(protected ResponseInterface $response, protected PackerInterface $packer)
     {
+        $this->body = (string) $response->getBody();
+        $this->statusCode = $response->getStatusCode();
+
         $data = json_decode((string) $response->getBody(), true);
 
-        $this->errCode = (int) ($data['errcode'] ?? -1);
-        $this->errMsg = (string) ($data['errmsg'] ?? '');
+        if (! empty($data)) {
+            $this->errCode = (int) ($data['errcode'] ?? -1);
+            $this->errMsg = (string) ($data['errmsg'] ?? '');
 
-        if ($encrypt = $data['encrypt'] ?? '') {
-            $this->body = $this->packer->unpack($encrypt);
-            $this->json = (array) json_decode($this->body, true);
+            if ($encrypted = $data['encrypt'] ?? '') {
+                $decrypted = $this->packer->unpack($encrypted);
+                $this->json = (array) json_decode($decrypted, true);
+            }
         }
     }
 
@@ -83,11 +90,15 @@ class Response implements ArrayAccess
 
     public function status(): int
     {
-        return $this->response->getStatusCode();
+        return $this->statusCode;
     }
 
-    public function body(): string
+    public function body($decrypt = false): string
     {
+        if ($decrypt) {
+            return $this->packer->unpack($this->body);
+        }
+
         return $this->body;
     }
 
@@ -116,13 +127,13 @@ class Response implements ArrayAccess
         return $this->json;
     }
 
-    public function throw(): self
+    public function throw(bool $onlyCheckHttpStatusCode = false): self
     {
         if ($this->status() != 200) {
             throw new RequestException('HTTP status code ' . $this->status(), ErrorCode::$IllegalHttpReq);
         }
 
-        if ($this->getErrCode() !== ErrorCode::$OK) {
+        if (! $onlyCheckHttpStatusCode && $this->getErrCode() !== ErrorCode::$OK) {
             throw new Exception($this->getErrMsg(), $this->getErrCode());
         }
 

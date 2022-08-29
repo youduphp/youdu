@@ -212,7 +212,7 @@ class Client extends BaseClient
      */
     public function getAvatar($userId, int $size = 0): string
     {
-        return $this->httpGet('/cgi/avatar/get', ['userId' => $userId, 'size' => $size])->throw()->body();
+        return $this->httpGet('/cgi/avatar/get', ['userId' => $userId, 'size' => $size])->throw(true)->body(true);
     }
 
     /**

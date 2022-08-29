@@ -72,7 +72,7 @@ class Client extends BaseClient
 
         $fileInfo = $this->packer->unpack($response->getHeaderLine('Encrypt'));
         $fileInfo = json_decode($fileInfo, true, 512, JSON_THROW_ON_ERROR);
-        $fileContent = $this->packer->unpack((string) $response->getBody());
+        $fileContent = $response->body(true);
 
         $saveAs = rtrim($savePath, '/') . '/' . $fileInfo['name'];
         $saved = file_put_contents($saveAs, $fileContent);
