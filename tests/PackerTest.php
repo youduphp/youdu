@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-use YouduPhp\Youdu\Packer\Packer;
+use YouduPhp\Youdu\Kernel\Util\Packer\Packer;
 
 beforeEach(function () {
     $config = makeConfig();
