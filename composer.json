@@ -25,7 +25,7 @@
     },
     "autoload": {
         "files": [
-            "src/helpers.php"
+            "src/Kernel/Util/Functions.php"
         ],
         "psr-4": {
             "YouduPhp\\Youdu\\": "src/"
