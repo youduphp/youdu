@@ -15,18 +15,18 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
 use YouduPhp\Youdu\Config;
 use YouduPhp\Youdu\Kernel\Exception\AccessTokenDoesNotExistException;
-use YouduPhp\Youdu\Kernel\Util\Packer\Packer;
 use YouduPhp\Youdu\Kernel\Util\Packer\PackerInterface;
 
 use function YouduPhp\Youdu\Kernel\Util\tap;
 
 abstract class AbstractClient
 {
-    protected PackerInterface $packer;
-
-    public function __construct(protected Config $config, protected ClientInterface $client, protected ?CacheInterface $cache = null)
-    {
-        $this->packer = new Packer($config);
+    public function __construct(
+        protected Config $config,
+        protected ClientInterface $client,
+        protected PackerInterface $packer,
+        protected ?CacheInterface $cache = null
+    ) {
     }
 
     public function httpGet(string $uri, array $query = []): Response

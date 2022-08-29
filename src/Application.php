@@ -14,6 +14,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Psr\SimpleCache\CacheInterface;
 use YouduPhp\Youdu\Kernel\Exception\InvalidArgumentException;
+use YouduPhp\Youdu\Kernel\Util\Packer\Packer;
+use YouduPhp\Youdu\Kernel\Util\Packer\PackerInterface;
 
 /**
  * @method Kernel\Dept\Client dept()
@@ -27,12 +29,15 @@ class Application
 {
     private array $container = [];
 
+    private PackerInterface $packer;
+
     public function __construct(protected Config $config, private ?ClientInterface $client = null, protected ?CacheInterface $cache = null)
     {
         $this->client = $client ?? new Client([
             'base_uri' => $config->getApi(),
             'timeout' => $config->getTimeout(),
         ]);
+        $this->packer = new Packer($config);
     }
 
     public function __call($name, $arguments)
@@ -47,6 +52,11 @@ class Application
             throw new InvalidArgumentException(sprintf('Class "%s" not found', $class));
         }
 
-        return $this->container[$name] = new $class($this->config, $this->client, $this->cache);
+        return $this->container[$name] = new $class(
+            $this->config,
+            $this->client,
+            $this->packer,
+            $this->cache
+        );
     }
 }
