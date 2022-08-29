@@ -12,11 +12,11 @@ namespace YouduPhp\Youdu\Kernel\Session;
 
 use YouduPhp\Youdu\Kernel\Exception\InvalidArgumentException;
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
-use YouduPhp\Youdu\Kernel\HttpClient\BaseClient;
+use YouduPhp\Youdu\Kernel\HttpClient\AbstractClient;
 use YouduPhp\Youdu\Kernel\Message\Session\MessageInterface;
 use YouduPhp\Youdu\Kernel\Message\Session\Text;
 
-class Client extends BaseClient
+class Client extends AbstractClient
 {
     /**
      * 创建会话.

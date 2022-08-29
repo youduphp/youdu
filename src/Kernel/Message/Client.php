@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace YouduPhp\Youdu\Kernel\Message;
 
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
-use YouduPhp\Youdu\Kernel\HttpClient\BaseClient;
+use YouduPhp\Youdu\Kernel\HttpClient\AbstractClient;
 use YouduPhp\Youdu\Kernel\Message\App\MessageInterface;
 use YouduPhp\Youdu\Kernel\Message\App\PopWindow;
 use YouduPhp\Youdu\Kernel\Message\App\SysMsg;
 use YouduPhp\Youdu\Kernel\Message\App\Text;
 
-class Client extends BaseClient
+class Client extends AbstractClient
 {
     /**
      * 发送应用消息.
