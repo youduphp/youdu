@@ -10,8 +10,8 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Session;
 
-use YouduPhp\Youdu\Kernel\Exception\Exception;
 use YouduPhp\Youdu\Kernel\Exception\InvalidArgumentException;
+use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\HttpClient\BaseClient;
 use YouduPhp\Youdu\Kernel\Message\Session\MessageInterface;
 use YouduPhp\Youdu\Kernel\Message\Session\Text;
@@ -80,7 +80,7 @@ class Client extends BaseClient
     /**
      * 发送会话消息.
      *
-     * @throws Exception
+     * @throws LogicException
      */
     public function send(MessageInterface $message): bool
     {

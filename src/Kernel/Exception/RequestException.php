@@ -10,8 +10,6 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Exception;
 
-use RuntimeException;
-
-class RequestException extends RuntimeException
+class RequestException extends \GuzzleHttp\Exception\RequestException
 {
 }

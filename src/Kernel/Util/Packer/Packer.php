@@ -12,7 +12,7 @@ namespace YouduPhp\Youdu\Kernel\Util\Packer;
 
 use YouduPhp\Youdu\Kernel\Config;
 use YouduPhp\Youdu\Kernel\Exception\ErrorCode;
-use YouduPhp\Youdu\Kernel\Exception\Exception;
+use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Util\Encipher\Prpcrypt;
 
 class Packer implements PackerInterface
@@ -29,7 +29,7 @@ class Packer implements PackerInterface
         [$errcode, $encrypted] = $this->crypter->encrypt($string, $this->config->getAppId());
 
         if ($errcode != ErrorCode::$OK) {
-            throw new Exception($encrypted, (int) $errcode);
+            throw new LogicException($encrypted, (int) $errcode);
         }
 
         return $encrypted;
@@ -38,13 +38,13 @@ class Packer implements PackerInterface
     public function unpack(string $string): string
     {
         if (strlen($this->config->getAesKey()) != 44) {
-            throw new Exception('Illegal aesKey', ErrorCode::$IllegalAesKey);
+            throw new LogicException('Illegal aesKey', ErrorCode::$IllegalAesKey);
         }
 
         [$errcode, $decrypted] = $this->crypter->decrypt($string, $this->config->getAppId());
 
         if ($errcode != ErrorCode::$OK) {
-            throw new Exception('Decrypt failed:' . $decrypted, (int) $errcode);
+            throw new LogicException('Decrypt failed:' . $decrypted, (int) $errcode);
         }
 
         return $decrypted;

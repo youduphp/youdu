@@ -13,7 +13,7 @@ namespace YouduPhp\Youdu\Kernel\HttpClient;
 use ArrayAccess;
 use Psr\Http\Message\ResponseInterface;
 use YouduPhp\Youdu\Kernel\Exception\ErrorCode;
-use YouduPhp\Youdu\Kernel\Exception\Exception;
+use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Exception\RequestException;
 use YouduPhp\Youdu\Kernel\Util\Packer\PackerInterface;
 
@@ -134,7 +134,7 @@ class Response implements ArrayAccess
         }
 
         if (! $onlyCheckHttpStatusCode && $this->getErrCode() !== ErrorCode::$OK) {
-            throw new Exception($this->getErrMsg(), $this->getErrCode());
+            throw new LogicException($this->getErrMsg(), $this->getErrCode());
         }
 
         return $this;

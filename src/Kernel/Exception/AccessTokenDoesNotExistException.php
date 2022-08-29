@@ -10,6 +10,6 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Exception;
 
-class AccessTokenDoesNotExistException extends Exception
+class AccessTokenDoesNotExistException extends LogicException
 {
 }

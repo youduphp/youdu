@@ -10,6 +10,6 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Exception;
 
-class InvalidArgumentException extends Exception
+class InvalidArgumentException extends \InvalidArgumentException
 {
 }

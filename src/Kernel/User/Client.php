@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\User;
 
-use YouduPhp\Youdu\Kernel\Exception\Exception;
+use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\HttpClient\BaseClient;
 
 class Client extends BaseClient
@@ -187,7 +187,7 @@ class Client extends BaseClient
             // 保存加密文件
             $encryptedFile = $this->packer->pack($originalContent);
             if (file_put_contents($tmpFile, $encryptedFile) === false) {
-                throw new Exception('Create tmpfile failed', 1);
+                throw new LogicException('Create tmpfile failed', 1);
             }
 
             // 封装上传参数

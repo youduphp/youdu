@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Media;
 
-use YouduPhp\Youdu\Kernel\Exception\Exception;
+use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\HttpClient\BaseClient;
 
 class Client extends BaseClient
@@ -23,7 +23,7 @@ class Client extends BaseClient
     public function upload(string $file = '', string $fileType = 'file'): string
     {
         if (! in_array($fileType, ['file', 'voice', 'video', 'image'])) {
-            throw new Exception('Un-support file type ' . $fileType, 1);
+            throw new LogicException('Un-support file type ' . $fileType, 1);
         }
 
         if (preg_match('/^https?:\/\//i', $file)) { // 远程文件
@@ -50,7 +50,7 @@ class Client extends BaseClient
 
             // 保存加密文件
             if (file_put_contents($tmpFile, $this->packer->pack($originalContent)) === false) {
-                throw new Exception('Create tmpfile failed', 1);
+                throw new LogicException('Create tmpfile failed', 1);
             }
 
             // 开始上传
@@ -78,7 +78,7 @@ class Client extends BaseClient
         $saved = file_put_contents($saveAs, $fileContent);
 
         if (! $saved) {
-            throw new Exception(sprintf('Save %s failed', $saveAs), 1);
+            throw new LogicException(sprintf('Save %s failed', $saveAs), 1);
         }
 
         return true;

@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Message;
 
-use YouduPhp\Youdu\Kernel\Exception\Exception;
+use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\HttpClient\BaseClient;
 use YouduPhp\Youdu\Kernel\Message\App\MessageInterface;
 use YouduPhp\Youdu\Kernel\Message\App\PopWindow;
@@ -73,7 +73,7 @@ class Client extends BaseClient
         }
 
         if (! $message instanceof SysMsg) {
-            throw new Exception('$message must instanceof' . SysMsg::class);
+            throw new LogicException('$message must instanceof' . SysMsg::class);
         }
 
         $message->toAll($onlineOnly);
