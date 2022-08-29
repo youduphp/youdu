@@ -64,6 +64,10 @@ class BaseClient
             'encrypt' => $this->packer->pack(json_encode($params)),
         ];
 
+        if (isset($params['userId'])) {
+            $array['userId'] = $params['userId'];
+        }
+
         $data = [];
 
         foreach ($array as $key => $value) {

@@ -184,13 +184,8 @@ class Client extends BaseClient
         $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
 
         try {
-            $encryptedFile = $this->packer->pack($originalContent);
-            $encryptedMsg = $this->packer->pack(json_encode([
-                'type' => 'image',
-                'name' => basename($file),
-            ], JSON_THROW_ON_ERROR));
-
             // 保存加密文件
+            $encryptedFile = $this->packer->pack($originalContent);
             if (file_put_contents($tmpFile, $encryptedFile) === false) {
                 throw new Exception('Create tmpfile failed', 1);
             }
@@ -198,12 +193,10 @@ class Client extends BaseClient
             // 封装上传参数
             $parameters = [
                 'userId' => $userId,
-                'file' => $this->makeUploadFile(realpath($tmpFile)),
-                'encrypt' => $encryptedMsg,
             ];
 
             // 开始上传
-            $this->httpUpload('/cgi/avatar/set', $parameters)->throw();
+            $this->httpUpload('/cgi/avatar/set', $tmpFile, $parameters)->throw();
 
             return true;
         } finally {
