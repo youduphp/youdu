@@ -10,6 +10,8 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Util;
 
+use Closure;
+
 /**
  * Call the given Closure with the given value then return the value.
  *
@@ -38,4 +40,14 @@ function tap($value, callable $callback = null)
 function with($value, callable $callback = null)
 {
     return is_null($callback) ? $value : $callback($value);
+}
+
+/**
+ * Return the default value of the given value.
+ *
+ * @param mixed $value
+ */
+function value($value, ...$args)
+{
+    return $value instanceof Closure ? $value(...$args) : $value;
 }

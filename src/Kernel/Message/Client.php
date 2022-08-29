@@ -67,7 +67,7 @@ class Client extends BaseClient
     public function sendToAll(SysMsg|string $message, bool $onlineOnly = false): bool
     {
         if (is_string($message)) {
-            $items = new \YouduPhp\Youdu\Kernel\Message\App\Items\SysMsg();
+            $items = new App\Items\SysMsg();
             $items->addText($message);
             $message = new SysMsg($items);
         }
