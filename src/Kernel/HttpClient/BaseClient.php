@@ -45,14 +45,35 @@ class BaseClient
         );
     }
 
-    public function httpUpload(string $uri, array $data = []): Response
+    public function httpUpload(string $uri, string $file, array $data = []): Response
     {
         return $this->buildResponse(
             $this->client->request('POST', $uri, [
-                'multipart' => $this->preformatParams($data),
+                'multipart' => $this->preformatUploadFileParams($file, $data),
                 'query' => $this->preformatQuery(),
             ])
         );
+    }
+
+    public function preformatUploadFileParams(string $file, array $params = []): array
+    {
+        $array = [
+            'buin' => $this->config->getBuin(),
+            'appId' => $this->config->getAppId(),
+            'file' => $this->makeUploadFile(realpath($file)),
+            'encrypt' => $this->packer->pack(json_encode($params)),
+        ];
+
+        $data = [];
+
+        foreach ($array as $key => $value) {
+            $data[] = [
+                'name' => $key,
+                'contents' => $value,
+            ];
+        }
+
+        return $data;
     }
 
     protected function preformatParams(array $params): array

@@ -28,18 +28,18 @@ class Client extends BaseClient
      */
     public function create(string $title, string $creator = '', array $member = [], string $type = 'multi'): array
     {
+        if (count($member) < 3) {
+            throw new InvalidArgumentException('Members too less', 1);
+        }
+
+        $member = array_map(fn ($item) => (string) $item, $member);
+
         $parameters = [
             'title' => $title,
             'creator' => $creator,
             'type' => $type,
             'member' => $member,
         ];
-
-        if (count($member) < 3) {
-            throw new InvalidArgumentException('Members too less', 1);
-        }
-
-        $member = array_map(fn ($item) => (string) $item, $member);
 
         return $this->httpPost('/cgi/session/create', $parameters)->throw()->json();
     }

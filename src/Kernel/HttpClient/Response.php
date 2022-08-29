@@ -83,7 +83,7 @@ class Response implements ArrayAccess
 
     public function status(): int
     {
-        return 200;
+        return $this->response->getStatusCode();
     }
 
     public function body(): string

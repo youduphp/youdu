@@ -23,7 +23,7 @@ class Client extends BaseClient
     public function upload(string $file = '', string $fileType = 'file'): string
     {
         if (! in_array($fileType, ['file', 'voice', 'video', 'image'])) {
-            throw new Exception('Unsupport file type ' . $fileType, 1);
+            throw new Exception('Un-support file type ' . $fileType, 1);
         }
 
         if (preg_match('/^https?:\/\//i', $file)) { // 远程文件
@@ -43,27 +43,18 @@ class Client extends BaseClient
         $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
 
         try {
-            $encryptedFile = $this->packer->pack($originalContent);
-            $encryptedMsg = $this->packer->pack(json_encode([
+            $parameters = [
                 'type' => $fileType ?? 'file',
                 'name' => basename($file),
-            ], JSON_THROW_ON_ERROR));
+            ];
 
             // 保存加密文件
-            if (file_put_contents($tmpFile, $encryptedFile) === false) {
+            if (file_put_contents($tmpFile, $this->packer->pack($originalContent)) === false) {
                 throw new Exception('Create tmpfile failed', 1);
             }
 
-            // 封装上传参数
-            $parameters = [
-                'file' => $this->makeUploadFile(realpath($tmpFile)),
-                'encrypt' => $encryptedMsg,
-                'buin' => $this->config->getBuin(),
-                'appId' => $this->config->getAppId(),
-            ];
-
             // 开始上传
-            return $this->httpUpload('/cgi/media/upload', $parameters)->throw()->json('mediaId');
+            return $this->httpUpload('/cgi/media/upload', $tmpFile, $parameters)->throw()->json('mediaId');
         } finally {
             if (is_file($tmpFile)) {
                 unlink($tmpFile);
@@ -77,11 +68,11 @@ class Client extends BaseClient
     public function download(string $mediaId, string $savePath): bool
     {
         $parameters = ['mediaId' => $mediaId];
+        $response = $this->httpPost('/cgi/media/get', $parameters);
 
-        $resp = $this->httpPost('/cgi/media/get', $parameters)->throw();
-        $fileInfo = $this->packer->unpack($resp->getHeaderLine('Encrypt'));
+        $fileInfo = $this->packer->unpack($response->getHeaderLine('Encrypt'));
         $fileInfo = json_decode($fileInfo, true, 512, JSON_THROW_ON_ERROR);
-        $fileContent = $this->packer->unpack($resp->getBody()->getContents());
+        $fileContent = $this->packer->unpack((string) $response->getBody());
 
         $saveAs = rtrim($savePath, '/') . '/' . $fileInfo['name'];
         $saved = file_put_contents($saveAs, $fileContent);
@@ -98,9 +89,7 @@ class Client extends BaseClient
      */
     public function info(string $mediaId = ''): array
     {
-        $parameters = [
-            'mediaId' => $mediaId,
-        ];
+        $parameters = ['mediaId' => $mediaId];
 
         return $this->httpPost('/cgi/media/search', $parameters)->throw()->json();
     }
