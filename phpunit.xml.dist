@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+>
+    <testsuites>
+        <testsuite name="Test Suite">
+            <directory suffix="Test.php">./tests</directory>
+        </testsuite>
+    </testsuites>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./app</directory>
+            <directory suffix=".php">./src</directory>
+        </include>
+    </coverage>
+    <php>
+        <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF" />
+        <env name="YOUDU_API" value="http://10.0.0.188:7080" />
+        <env name="YOUDU_BUIN" value="56565656" />
+        <env name="YOUDU_DEFAULT_APP_ID" value="yd06AB76EC519B4130A802224B4C60F689" />
+        <env name="YOUDU_DEFAULT_AES_KEY" value="A0aWSqDL5SV4fafQl3OavoVPUn6sx7xNnD+1hOoTeWk=" />
+    </php>
+</phpunit>
