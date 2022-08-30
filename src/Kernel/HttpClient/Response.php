@@ -17,6 +17,7 @@ use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Exception\RequestException;
 use YouduPhp\Youdu\Kernel\Util\Packer\PackerInterface;
 
+use function YouduPhp\Youdu\Kernel\Util\array_get;
 use function YouduPhp\Youdu\Kernel\Util\tap;
 use function YouduPhp\Youdu\Kernel\Util\with;
 
@@ -98,7 +99,10 @@ class Response implements ArrayAccess
 
     public function body($decrypt = false): string
     {
-        return (string) with($this->body, fn ($body) => $decrypt ? $this->packer->unpack($this->body) : $body);
+        return (string) with(
+            $this->body,
+            fn ($body) => $decrypt ? $this->packer->unpack($this->body) : $body
+        );
     }
 
     public function headers(): array
@@ -108,17 +112,7 @@ class Response implements ArrayAccess
 
     public function json(string $key = null, $default = null)
     {
-        if (is_null($key)) {
-            return $this->json;
-        }
-
-        $result = $this->json;
-
-        foreach (explode('.', $key) as $k) {
-            $result = $result[$k] ?? $default;
-        }
-
-        return $result;
+        return array_get($this->json, $key, $default);
     }
 
     public function toArray(): array
