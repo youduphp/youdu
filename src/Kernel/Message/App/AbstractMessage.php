@@ -10,8 +10,12 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Message\App;
 
+use YouduPhp\Youdu\Kernel\Utils\Traits\Conditionable;
+
 abstract class AbstractMessage implements MessageInterface
 {
+    use Conditionable;
+
     protected ?string $toUser = null;
 
     protected ?string $toDept = null;

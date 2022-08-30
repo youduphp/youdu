@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @contact  huangdijia@gmail.com
  */
 use YouduPhp\Youdu\Kernel\HttpClient\Response;
-use YouduPhp\Youdu\Kernel\Util\Packer\Packer;
+use YouduPhp\Youdu\Kernel\Utils\Packer\Packer;
 
 beforeEach(function () {
     $config = makeConfig();

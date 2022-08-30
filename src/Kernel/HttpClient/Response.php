@@ -15,11 +15,11 @@ use Psr\Http\Message\ResponseInterface;
 use YouduPhp\Youdu\Kernel\Exception\ErrorCode;
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Exception\RequestException;
-use YouduPhp\Youdu\Kernel\Util\Packer\PackerInterface;
+use YouduPhp\Youdu\Kernel\Utils\Packer\PackerInterface;
 
-use function YouduPhp\Youdu\Kernel\Util\array_get;
-use function YouduPhp\Youdu\Kernel\Util\tap;
-use function YouduPhp\Youdu\Kernel\Util\with;
+use function YouduPhp\Youdu\Kernel\Utils\array_get;
+use function YouduPhp\Youdu\Kernel\Utils\tap;
+use function YouduPhp\Youdu\Kernel\Utils\with;
 
 /**
  * @mixin \GuzzleHttp\Psr7\Response

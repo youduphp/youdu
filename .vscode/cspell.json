@@ -11,6 +11,7 @@
         "batchdelete",
         "buin",
         "Cacheable",
+        "Conditionable",
         "CONNECTTIMEOUT",
         "crypter",
         "CURLOPT",

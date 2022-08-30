@@ -105,13 +105,8 @@ class Client extends AbstractClient
      */
     public function popWindow(string $toUser = '', string $toDept = '', PopWindow $message = null): bool
     {
-        if ($toUser) {
-            $message->toUser($toUser);
-        }
-
-        if ($toDept) {
-            $message->toDept($toDept);
-        }
+        $message->when($toUser, fn ($message) => $message->toUser($toUser))
+            ->when($toDept, fn ($message) => $message->toDept($toDept));
 
         $parameters = [
             'app_id' => $this->config->getAppId(),
