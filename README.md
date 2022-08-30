@@ -33,3 +33,8 @@ $msg = (new Text('hello world'))->toUser(10001);
 
 $app->message()->send($msg);
 ```
+
+- Components
+
+- [Laravel](https://github.com/youduphp/laravel-youdu)
+- [Hyperf](https://github.com/youduphp/hyperf-youdu)
