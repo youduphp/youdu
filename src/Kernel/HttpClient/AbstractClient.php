@@ -17,7 +17,6 @@ use YouduPhp\Youdu\Config;
 use YouduPhp\Youdu\Kernel\Exception\AccessTokenDoesNotExistException;
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Utils\Packer\PackerInterface;
-
 use function YouduPhp\Youdu\Kernel\Utils\tap;
 
 abstract class AbstractClient
@@ -73,7 +72,7 @@ abstract class AbstractClient
                 ])
             );
         } finally {
-            if (is_file($tmpFile)) {
+            if (isset($tmpFile) && is_file($tmpFile)) {
                 unlink($tmpFile);
             }
         }
