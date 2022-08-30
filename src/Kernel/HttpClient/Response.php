@@ -16,6 +16,7 @@ use YouduPhp\Youdu\Kernel\Exception\ErrorCode;
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Exception\RequestException;
 use YouduPhp\Youdu\Kernel\Utils\Packer\PackerInterface;
+use YouduPhp\Youdu\Kernel\Utils\Traits\Tappable;
 
 use function YouduPhp\Youdu\Kernel\Utils\array_get;
 use function YouduPhp\Youdu\Kernel\Utils\tap;
@@ -26,6 +27,8 @@ use function YouduPhp\Youdu\Kernel\Utils\with;
  */
 class Response implements ArrayAccess
 {
+    use Tappable;
+
     protected int $errCode = 0;
 
     protected string $errMsg = '';

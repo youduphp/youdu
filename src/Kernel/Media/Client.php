@@ -41,11 +41,14 @@ class Client extends AbstractClient
     public function download(string $mediaId, string $savePath): bool
     {
         $parameters = ['mediaId' => $mediaId];
-        $response = $this->httpPostJson('/cgi/media/get', $parameters);
+        $fileInfo = [];
+        $fileContent = $this->httpPostJson('/cgi/media/get', $parameters)
+            ->tap(function ($response) use (&$fileInfo) {
+                $fileInfo = $this->packer->unpack($response->getHeaderLine('Encrypt'));
+                $fileInfo = json_decode($fileInfo, true, 512, JSON_THROW_ON_ERROR);
+            })
+            ->body(true);
 
-        $fileInfo = $this->packer->unpack($response->getHeaderLine('Encrypt'));
-        $fileInfo = json_decode($fileInfo, true, 512, JSON_THROW_ON_ERROR);
-        $fileContent = $response->body(true);
         $saveAs = rtrim($savePath, '/') . '/' . $fileInfo['name'];
         $saved = file_put_contents($saveAs, $fileContent);
 
