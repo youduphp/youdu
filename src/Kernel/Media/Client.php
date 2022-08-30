@@ -46,7 +46,6 @@ class Client extends AbstractClient
         $fileInfo = $this->packer->unpack($response->getHeaderLine('Encrypt'));
         $fileInfo = json_decode($fileInfo, true, 512, JSON_THROW_ON_ERROR);
         $fileContent = $response->body(true);
-
         $saveAs = rtrim($savePath, '/') . '/' . $fileInfo['name'];
         $saved = file_put_contents($saveAs, $fileContent);
 
@@ -62,8 +61,6 @@ class Client extends AbstractClient
      */
     public function info(string $mediaId = ''): array
     {
-        $parameters = ['mediaId' => $mediaId];
-
-        return $this->httpPostJson('/cgi/media/search', $parameters)->throw()->json();
+        return $this->httpPostJson('/cgi/media/search', ['mediaId' => $mediaId])->throw()->json();
     }
 }

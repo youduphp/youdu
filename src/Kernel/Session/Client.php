@@ -98,8 +98,7 @@ class Client extends AbstractClient
             $message = new Text($message);
         }
 
-        $message->sender($sender);
-        $message->receiver($receiver);
+        $message->sender($sender)->receiver($receiver);
 
         return $this->send($message);
     }
@@ -113,8 +112,7 @@ class Client extends AbstractClient
             $message = new Text($message);
         }
 
-        $message->sender($sender);
-        $message->session($sessionId);
+        $message->sender($sender)->session($sessionId);
 
         return $this->send($message);
     }

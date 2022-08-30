@@ -34,11 +34,7 @@ class Client extends AbstractClient
      */
     public function create(string $name): int|string
     {
-        $parameters = [
-            'name' => $name,
-        ];
-
-        return $this->httpPostJson('/cgi/group/create', $parameters)->json('id');
+        return $this->httpPostJson('/cgi/group/create', ['name' => $name])->json('id');
     }
 
     /**
@@ -110,6 +106,11 @@ class Client extends AbstractClient
      */
     public function isMember(string $groupId, $userId): bool
     {
-        return $this->httpGet('/cgi/group/ismember', ['id' => $groupId, 'userId' => $userId])->json('belong') ? true : false;
+        $parameters = [
+            'id' => $groupId,
+            'userId' => $userId,
+        ];
+
+        return $this->httpGet('/cgi/group/ismember', $parameters)->json('belong') ? true : false;
     }
 }
