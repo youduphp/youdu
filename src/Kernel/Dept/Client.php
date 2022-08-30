@@ -41,7 +41,7 @@ class Client extends AbstractClient
             'alias' => $alias,
         ];
 
-        return (int) $this->httpPost('/cgi/dept/create', $parameters)->json('id');
+        return (int) $this->httpPostJson('/cgi/dept/create', $parameters)->json('id');
     }
 
     /**
@@ -63,7 +63,7 @@ class Client extends AbstractClient
             'alias' => $alias,
         ];
 
-        $this->httpPost('/cgi/dept/update', $parameters)->throw();
+        $this->httpPostJson('/cgi/dept/update', $parameters)->throw();
 
         return true;
     }

@@ -10,7 +10,6 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\User;
 
-use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\HttpClient\AbstractClient;
 
 class Client extends AbstractClient
@@ -54,7 +53,7 @@ class Client extends AbstractClient
             'dept' => $dept,
         ];
 
-        $this->httpPost('/cgi/user/create', $parameters)->throw();
+        $this->httpPostJson('/cgi/user/create', $parameters)->throw();
 
         return true;
     }
@@ -82,7 +81,7 @@ class Client extends AbstractClient
             'dept' => $dept,
         ];
 
-        $this->httpPost('/cgi/user/update', $parameters)->throw();
+        $this->httpPostJson('/cgi/user/update', $parameters)->throw();
 
         return true;
     }
@@ -106,7 +105,7 @@ class Client extends AbstractClient
             'sortId' => $sortId,
         ];
 
-        $this->httpPost('/cgi/user/positionupdate', $parameters)->throw();
+        $this->httpPostJson('/cgi/user/positionupdate', $parameters)->throw();
 
         return true;
     }
@@ -118,11 +117,7 @@ class Client extends AbstractClient
     public function delete($userId): bool
     {
         if (is_array($userId)) {
-            $parameters = [
-                'delList' => $userId,
-            ];
-
-            $this->httpPost('/cgi/user/batchdelete', $parameters)->throw();
+            $this->httpPostJson('/cgi/user/batchdelete', ['delList' => $userId])->throw();
 
             return true;
         }
@@ -156,7 +151,7 @@ class Client extends AbstractClient
             'passwd' => md5($passwd),
         ];
 
-        $this->httpPost('/cgi/user/setauth', $parameters)->throw();
+        $this->httpPostJson('/cgi/user/setauth', $parameters)->throw();
 
         return true;
     }
@@ -167,43 +162,15 @@ class Client extends AbstractClient
      */
     public function setAvatar($userId, string $file): bool
     {
-        if (preg_match('/^https?:\/\//i', $file)) { // 远程文件
-            $contextOptions = stream_context_create([
-                'ssl' => [
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                ],
-            ]);
+        // 封装上传参数
+        $parameters = [
+            'userId' => $userId,
+        ];
 
-            $originalContent = file_get_contents($file, false, $contextOptions);
-        } else { // 本地文件
-            $originalContent = file_get_contents($file);
-        }
+        // 开始上传
+        $this->httpUpload('/cgi/avatar/set', $file, $parameters)->throw();
 
-        // 加密文件
-        $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
-
-        try {
-            // 保存加密文件
-            $encryptedFile = $this->packer->pack($originalContent);
-            if (file_put_contents($tmpFile, $encryptedFile) === false) {
-                throw new LogicException('Create tmpfile failed', 1);
-            }
-
-            // 封装上传参数
-            $parameters = [
-                'userId' => $userId,
-            ];
-
-            // 开始上传
-            $this->httpUpload('/cgi/avatar/set', $tmpFile, $parameters)->throw();
-
-            return true;
-        } finally {
-            if (is_file($tmpFile)) {
-                unlink($tmpFile);
-            }
-        }
+        return true;
     }
 
     /**
@@ -220,6 +187,6 @@ class Client extends AbstractClient
      */
     public function identify(string $token): array
     {
-        return $this->httpGet('/cgi/identify?token=' . $token)->throw()->json('userInfo', []);
+        return $this->httpGet('/cgi/identify', ['token' => $token])->throw()->json('userInfo', []);
     }
 }

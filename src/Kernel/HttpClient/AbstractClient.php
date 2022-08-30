@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
 use YouduPhp\Youdu\Config;
 use YouduPhp\Youdu\Kernel\Exception\AccessTokenDoesNotExistException;
+use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Util\Packer\PackerInterface;
 
 use function YouduPhp\Youdu\Kernel\Util\tap;
@@ -29,16 +30,27 @@ abstract class AbstractClient
     ) {
     }
 
-    public function httpGet(string $uri, array $query = []): Response
+    protected function httpGet(string $uri, array $query = []): Response
     {
         return $this->buildResponse(
             $this->client->request('GET', $uri, [
                 'query' => $this->preformatQuery($query),
+                'base_uri' => $this->config->getApi(),
             ])
         );
     }
 
-    public function httpPost(string $uri, array $data = []): Response
+    protected function httpPost(string $uri, array $data = []): Response
+    {
+        return $this->buildResponse(
+            $this->client->request('POST', $uri, [
+                'form_params' => $this->preformatParams($data),
+                'query' => $this->preformatQuery(),
+            ])
+        );
+    }
+
+    protected function httpPostJson(string $uri, array $data = []): Response
     {
         return $this->buildResponse(
             $this->client->request('POST', $uri, [
@@ -48,22 +60,36 @@ abstract class AbstractClient
         );
     }
 
-    public function httpUpload(string $uri, string $file, array $data = []): Response
+    protected function httpUpload(string $uri, string $file, array $data = []): Response
     {
-        return $this->buildResponse(
-            $this->client->request('POST', $uri, [
-                'multipart' => $this->preformatUploadFileParams($file, $data),
-                'query' => $this->preformatQuery(),
-            ])
-        );
+        try {
+            // Get the file contents and pack it
+            $tmpFile = $this->createTmpFile($file);
+
+            return $this->buildResponse(
+                $this->client->request('POST', $uri, [
+                    'multipart' => $this->preformatUploadFileParams($tmpFile, $data),
+                    'query' => $this->preformatQuery(),
+                ])
+            );
+        } finally {
+            if (is_file($tmpFile)) {
+                unlink($tmpFile);
+            }
+        }
     }
 
-    public function preformatUploadFileParams(string $file, array $params = []): array
+    protected function buildResponse(ResponseInterface $response): Response
+    {
+        return new Response($response, $this->packer);
+    }
+
+    protected function preformatUploadFileParams(string $file, array $params = []): array
     {
         $array = [
             'buin' => $this->config->getBuin(),
             'appId' => $this->config->getAppId(),
-            'file' => $this->makeUploadFile(realpath($file)),
+            'file' => fopen(realpath($file), 'r'),
             'encrypt' => $this->packer->pack(json_encode($params)),
         ];
 
@@ -138,18 +164,35 @@ abstract class AbstractClient
         );
     }
 
-    protected function buildResponse(ResponseInterface $response): Response
+    protected function createTmpFile(string $file): string
     {
-        return new Response($response, $this->packer);
-    }
+        return tap(
+            $this->config->getTmpPath() . '/' . uniqid('youdu_'),
+            function ($tmpFile) use ($file) {
+                if (preg_match('/^https?:\/\//i', $file)) { // 远程文件
+                    $contextOptions = stream_context_create([
+                        'ssl' => [
+                            'verify_peer' => false,
+                            'verify_peer_name' => false,
+                        ],
+                    ]);
 
-    /**
-     * Make a upload file.
-     *
-     * @return false|resource
-     */
-    protected function makeUploadFile(string $file)
-    {
-        return fopen($file, 'r');
+                    $contents = file_get_contents($file, false, $contextOptions);
+                } else { // 本地文件
+                    $contents = file_get_contents($file);
+                }
+
+                if ($contents === false) {
+                    throw new LogicException(sprintf('Read file %s failed', $file), 1);
+                }
+
+                $contents = $this->packer->pack($contents);
+
+                // Save the packed file to tmp path
+                if (file_put_contents($tmpFile, $contents) === false) {
+                    throw new LogicException(sprintf('Create tmpfile %s failed', $tmpFile), 1);
+                }
+            }
+        );
     }
 }
