@@ -10,6 +10,8 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Message\Session;
 
+use function YouduPhp\Youdu\Kernel\Utils\tap;
+
 abstract class AbstractMessage implements MessageInterface
 {
     protected ?string $sender = null;
@@ -20,23 +22,17 @@ abstract class AbstractMessage implements MessageInterface
 
     public function sender(string $sender): self
     {
-        $this->sender = $sender;
-
-        return $this;
+        return tap($this, fn () => $this->sender = $sender);
     }
 
     public function receiver(string $receiver): self
     {
-        $this->receiver = $receiver;
-
-        return $this;
+        return tap($this, fn () => $this->receiver = $receiver);
     }
 
     public function session(string $sessionId): self
     {
-        $this->sessionId = $sessionId;
-
-        return $this;
+        return tap($this, fn () => $this->sessionId = $sessionId);
     }
 
     public function toJson($options = JSON_UNESCAPED_UNICODE): string

@@ -14,8 +14,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Psr\SimpleCache\CacheInterface;
 use YouduPhp\Youdu\Kernel\Exception\InvalidArgumentException;
-use YouduPhp\Youdu\Kernel\Util\Packer\Packer;
-use YouduPhp\Youdu\Kernel\Util\Packer\PackerInterface;
+use YouduPhp\Youdu\Kernel\Utils\Packer\Packer;
+use YouduPhp\Youdu\Kernel\Utils\Packer\PackerInterface;
 
 /**
  * @method Kernel\Dept\Client dept()

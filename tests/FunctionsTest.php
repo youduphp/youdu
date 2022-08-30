@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-use function YouduPhp\Youdu\Kernel\Util\array_get;
+use function YouduPhp\Youdu\Kernel\Utils\array_get;
 
 it('assert array_get', function () {
     expect(array_get(['a' => 'b'], 'a'))->toBe('b');

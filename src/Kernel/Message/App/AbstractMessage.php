@@ -10,8 +10,14 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Message\App;
 
+use YouduPhp\Youdu\Kernel\Utils\Traits\Conditionable;
+
+use function YouduPhp\Youdu\Kernel\Utils\tap;
+
 abstract class AbstractMessage implements MessageInterface
 {
+    use Conditionable;
+
     protected ?string $toUser = null;
 
     protected ?string $toDept = null;
@@ -22,10 +28,7 @@ abstract class AbstractMessage implements MessageInterface
     public function toUser(string $toUser): self
     {
         // 兼容用,隔开
-        $toUser = strtr($toUser, ',', '|');
-        $this->toUser = $toUser;
-
-        return $this;
+        return tap($this, fn () => $this->toUser = strtr($toUser, ',', '|'));
     }
 
     /**
@@ -34,10 +37,7 @@ abstract class AbstractMessage implements MessageInterface
     public function toDept(string $toDept): self
     {
         // 兼容用,隔开
-        $toDept = strtr($toDept, ',', '|');
-        $this->toDept = $toDept;
-
-        return $this;
+        return tap($this, fn () => $this->toDept = strtr($toDept, ',', '|'));
     }
 
     /**
