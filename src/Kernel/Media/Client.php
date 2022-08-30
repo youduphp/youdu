@@ -26,28 +26,13 @@ class Client extends AbstractClient
             throw new LogicException('Un-support file type ' . $fileType, 1);
         }
 
-        // 加密文件
-        $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
-        $packedContents = $this->fileGetContents($file);
+        $parameters = [
+            'type' => $fileType ?? 'file',
+            'name' => basename($file),
+        ];
 
-        try {
-            // 保存加密文件
-            if (file_put_contents($tmpFile, $packedContents) === false) {
-                throw new LogicException('Create tmpfile failed', 1);
-            }
-
-            $parameters = [
-                'type' => $fileType ?? 'file',
-                'name' => basename($file),
-            ];
-
-            // 开始上传
-            return $this->httpUpload('/cgi/media/upload', $tmpFile, $parameters)->throw()->json('mediaId');
-        } finally {
-            if (is_file($tmpFile)) {
-                unlink($tmpFile);
-            }
-        }
+        // 开始上传
+        return $this->httpUpload('/cgi/media/upload', $file, $parameters)->throw()->json('mediaId');
     }
 
     /**

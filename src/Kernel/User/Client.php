@@ -10,7 +10,6 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\User;
 
-use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\HttpClient\AbstractClient;
 
 class Client extends AbstractClient
@@ -118,11 +117,7 @@ class Client extends AbstractClient
     public function delete($userId): bool
     {
         if (is_array($userId)) {
-            $parameters = [
-                'delList' => $userId,
-            ];
-
-            $this->httpPostJson('/cgi/user/batchdelete', $parameters)->throw();
+            $this->httpPostJson('/cgi/user/batchdelete', ['delList' => $userId])->throw();
 
             return true;
         }
@@ -167,30 +162,15 @@ class Client extends AbstractClient
      */
     public function setAvatar($userId, string $file): bool
     {
-        // 加密文件
-        $tmpFile = $this->config->getTmpPath() . '/' . uniqid('youdu_');
-        $packedContents = $this->fileGetContents($file);
+        // 封装上传参数
+        $parameters = [
+            'userId' => $userId,
+        ];
 
-        try {
-            // 保存加密文件
-            if (file_put_contents($tmpFile, $packedContents) === false) {
-                throw new LogicException('Create tmpfile failed', 1);
-            }
+        // 开始上传
+        $this->httpUpload('/cgi/avatar/set', $file, $parameters)->throw();
 
-            // 封装上传参数
-            $parameters = [
-                'userId' => $userId,
-            ];
-
-            // 开始上传
-            $this->httpUpload('/cgi/avatar/set', $tmpFile, $parameters)->throw();
-
-            return true;
-        } finally {
-            if (is_file($tmpFile)) {
-                unlink($tmpFile);
-            }
-        }
+        return true;
     }
 
     /**
