@@ -24,7 +24,7 @@ class Client extends AbstractClient
      */
     public function send(MessageInterface $message): bool
     {
-        $this->httpPostJson('/cgi/msg/send', $message->toArray())->throw();
+        $this->httpPostJson('/cgi/msg/send', $message->jsonSerialize())->throw();
 
         return true;
     }
