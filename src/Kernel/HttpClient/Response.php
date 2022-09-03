@@ -42,7 +42,7 @@ class Response implements ArrayAccess
         $this->body = (string) $response->getBody();
         $this->statusCode = $response->getStatusCode();
 
-        $data = json_decode((string) $response->getBody(), true);
+        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
         if (! empty($data)) {
             $this->errCode = (int) ($data['errcode'] ?? -1);
@@ -50,7 +50,7 @@ class Response implements ArrayAccess
 
             if ($encrypted = $data['encrypt'] ?? '') {
                 $decrypted = $this->packer->unpack($encrypted);
-                $this->json = (array) json_decode($decrypted, true);
+                $this->json = (array) json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
             }
         }
     }
