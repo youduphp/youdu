@@ -12,6 +12,7 @@ namespace YouduPhp\Youdu\Kernel\Media;
 
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\HttpClient\AbstractClient;
+use YouduPhp\Youdu\Kernel\HttpClient\Response;
 
 class Client extends AbstractClient
 {
@@ -43,8 +44,8 @@ class Client extends AbstractClient
         $parameters = ['mediaId' => $mediaId];
         $fileInfo = [];
         $fileContent = $this->httpPostJson('/cgi/media/get', $parameters)
-            ->tap(function ($response) use (&$fileInfo) {
-                $fileInfo = $this->packer->unpack($response->getHeaderLine('Encrypt'));
+            ->tap(function (Response $response) use (&$fileInfo) {
+                $fileInfo = $this->packer->unpack($response->header('Encrypt'));
                 $fileInfo = json_decode($fileInfo, true, 512, JSON_THROW_ON_ERROR);
             })
             ->body(true);
