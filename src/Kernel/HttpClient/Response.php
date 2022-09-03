@@ -17,10 +17,8 @@ use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Exception\RequestException;
 use YouduPhp\Youdu\Kernel\Utils\Packer\PackerInterface;
 use YouduPhp\Youdu\Kernel\Utils\Traits\Tappable;
-
 use function YouduPhp\Youdu\Kernel\Utils\array_get;
 use function YouduPhp\Youdu\Kernel\Utils\tap;
-use function YouduPhp\Youdu\Kernel\Utils\with;
 
 /**
  * @mixin \GuzzleHttp\Psr7\Response
@@ -95,12 +93,13 @@ class Response implements ArrayAccess
         return $this->errMsg;
     }
 
-    public function body($decrypt = false): string
+    public function body($unpack = false): string
     {
-        return (string) with(
-            $this->body,
-            fn ($body) => $decrypt ? $this->packer->unpack($this->body) : $body
-        );
+        if ($unpack) {
+            return $this->packer->unpack($this->body);
+        }
+
+        return $this->body;
     }
 
     public function header($header): string
