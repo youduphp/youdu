@@ -35,7 +35,6 @@ abstract class AbstractClient
         return $this->buildResponse(
             $this->client->request('GET', $uri, [
                 'query' => $this->preformatQuery($query),
-                'base_uri' => $this->config->getApi(),
             ])
         );
     }

@@ -16,11 +16,11 @@ use YouduPhp\Youdu\Kernel\Exception\ErrorCode;
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Exception\RequestException;
 use YouduPhp\Youdu\Kernel\Utils\Packer\PackerInterface;
+use YouduPhp\Youdu\Kernel\Utils\Traits\Conditionable;
 use YouduPhp\Youdu\Kernel\Utils\Traits\Tappable;
 
 use function YouduPhp\Youdu\Kernel\Utils\array_get;
 use function YouduPhp\Youdu\Kernel\Utils\tap;
-use function YouduPhp\Youdu\Kernel\Utils\with;
 
 /**
  * @mixin \GuzzleHttp\Psr7\Response
@@ -28,6 +28,7 @@ use function YouduPhp\Youdu\Kernel\Utils\with;
 class Response implements ArrayAccess
 {
     use Tappable;
+    use Conditionable;
 
     protected int $errCode = 0;
 
@@ -44,7 +45,7 @@ class Response implements ArrayAccess
         $this->body = (string) $response->getBody();
         $this->statusCode = $response->getStatusCode();
 
-        $data = json_decode((string) $response->getBody(), true);
+        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
         if (! empty($data)) {
             $this->errCode = (int) ($data['errcode'] ?? -1);
@@ -52,7 +53,7 @@ class Response implements ArrayAccess
 
             if ($encrypted = $data['encrypt'] ?? '') {
                 $decrypted = $this->packer->unpack($encrypted);
-                $this->json = (array) json_decode($decrypted, true);
+                $this->json = (array) json_decode($decrypted, true, 512, JSON_THROW_ON_ERROR);
             }
         }
     }
@@ -95,17 +96,18 @@ class Response implements ArrayAccess
         return $this->errMsg;
     }
 
-    public function status(): int
+    public function body($unpack = false): string
     {
-        return $this->statusCode;
+        if ($unpack) {
+            return $this->packer->unpack($this->body);
+        }
+
+        return $this->body;
     }
 
-    public function body($decrypt = false): string
+    public function header($header): string
     {
-        return (string) with(
-            $this->body,
-            fn ($body) => $decrypt ? $this->packer->unpack($this->body) : $body
-        );
+        return $this->response->getHeaderLine($header);
     }
 
     public function headers(): array
@@ -113,7 +115,42 @@ class Response implements ArrayAccess
         return $this->response->getHeaders();
     }
 
-    public function json(string $key = null, $default = null)
+    public function status(): int
+    {
+        return $this->statusCode;
+    }
+
+    public function reason(): string
+    {
+        return $this->response->getReasonPhrase();
+    }
+
+    public function successful(): bool
+    {
+        return $this->status() >= 200 && $this->status() < 300;
+    }
+
+    public function ok(): bool
+    {
+        return $this->status() === 200;
+    }
+
+    public function failed(): bool
+    {
+        return $this->serverError() || $this->clientError();
+    }
+
+    public function clientError(): bool
+    {
+        return $this->status() >= 400 && $this->status() < 500;
+    }
+
+    public function serverError(): bool
+    {
+        return $this->status() >= 500;
+    }
+
+    public function json(?string $key = null, $default = null)
     {
         return array_get($this->json, $key, $default);
     }
@@ -126,7 +163,7 @@ class Response implements ArrayAccess
     public function throw(bool $onlyCheckHttpStatusCode = false): self
     {
         return tap($this, function () use ($onlyCheckHttpStatusCode) {
-            if ($this->status() != 200) {
+            if (! $this->ok()) {
                 throw new RequestException('HTTP status code ' . $this->status(), ErrorCode::$IllegalHttpReq);
             }
 
