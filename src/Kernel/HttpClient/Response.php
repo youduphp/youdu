@@ -16,7 +16,9 @@ use YouduPhp\Youdu\Kernel\Exception\ErrorCode;
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
 use YouduPhp\Youdu\Kernel\Exception\RequestException;
 use YouduPhp\Youdu\Kernel\Utils\Packer\PackerInterface;
+use YouduPhp\Youdu\Kernel\Utils\Traits\Conditionable;
 use YouduPhp\Youdu\Kernel\Utils\Traits\Tappable;
+
 use function YouduPhp\Youdu\Kernel\Utils\array_get;
 use function YouduPhp\Youdu\Kernel\Utils\tap;
 
@@ -26,6 +28,7 @@ use function YouduPhp\Youdu\Kernel\Utils\tap;
 class Response implements ArrayAccess
 {
     use Tappable;
+    use Conditionable;
 
     protected int $errCode = 0;
 
@@ -147,7 +150,7 @@ class Response implements ArrayAccess
         return $this->status() >= 500;
     }
 
-    public function json(string $key = null, $default = null)
+    public function json(?string $key = null, $default = null)
     {
         return array_get($this->json, $key, $default);
     }
