@@ -34,7 +34,8 @@ $msg = (new Text('hello world'))->toUser(10001);
 $app->message()->send($msg);
 ```
 
-## Plugins
+## Components from frameworks
 
-- [Laravel](https://github.com/youduphp/laravel-youdu)
-- [Hyperf](https://github.com/youduphp/hyperf-youdu)
+- [x][Laravel](https://github.com/youduphp/laravel-youdu)
+- [x][Hyperf](https://github.com/youduphp/hyperf-youdu)
+- [ ][ThinkPHP]()
