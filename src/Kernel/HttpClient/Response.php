@@ -95,11 +95,6 @@ class Response implements ArrayAccess
         return $this->errMsg;
     }
 
-    public function status(): int
-    {
-        return $this->statusCode;
-    }
-
     public function body($decrypt = false): string
     {
         return (string) with(
@@ -108,9 +103,49 @@ class Response implements ArrayAccess
         );
     }
 
+    public function header($header): string
+    {
+        return $this->response->getHeaderLine($header);
+    }
+
     public function headers(): array
     {
         return $this->response->getHeaders();
+    }
+
+    public function status(): int
+    {
+        return $this->statusCode;
+    }
+
+    public function reason(): string
+    {
+        return $this->response->getReasonPhrase();
+    }
+
+    public function successful(): bool
+    {
+        return $this->status() >= 200 && $this->status() < 300;
+    }
+
+    public function ok(): bool
+    {
+        return $this->status() === 200;
+    }
+
+    public function failed(): bool
+    {
+        return $this->serverError() || $this->clientError();
+    }
+
+    public function clientError(): bool
+    {
+        return $this->status() >= 400 && $this->status() < 500;
+    }
+
+    public function serverError(): bool
+    {
+        return $this->status() >= 500;
     }
 
     public function json(string $key = null, $default = null)
@@ -126,7 +161,7 @@ class Response implements ArrayAccess
     public function throw(bool $onlyCheckHttpStatusCode = false): self
     {
         return tap($this, function () use ($onlyCheckHttpStatusCode) {
-            if ($this->status() != 200) {
+            if (! $this->ok()) {
                 throw new RequestException('HTTP status code ' . $this->status(), ErrorCode::$IllegalHttpReq);
             }
 
