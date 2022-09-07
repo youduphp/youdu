@@ -44,7 +44,7 @@ class Client extends AbstractClient
     public function create($userId, string $name, int $gender = 0, string $mobile = '', string $phone = '', string $email = '', array $dept = []): bool
     {
         $parameters = [
-            'userId' => $userId,
+            'userId' => (string) $userId,
             'name' => $name,
             'gender' => $gender,
             'mobile' => $mobile,
@@ -72,7 +72,7 @@ class Client extends AbstractClient
     public function update($userId, string $name, int $gender = 0, string $mobile = '', string $phone = '', string $email = '', array $dept = []): bool
     {
         $parameters = [
-            'userId' => $userId,
+            'userId' => (string) $userId,
             'name' => $name,
             'gender' => $gender,
             'mobile' => $mobile,
@@ -98,7 +98,7 @@ class Client extends AbstractClient
     public function updatePosition($userId, int $deptId, string $position = '', int $weight = 0, int $sortId = 0): bool
     {
         $parameters = [
-            'userId' => $userId,
+            'userId' => (string) $userId,
             'deptId' => $deptId,
             'position' => $position,
             'weight' => $weight,
@@ -117,7 +117,9 @@ class Client extends AbstractClient
     public function delete($userId): bool
     {
         if (is_array($userId)) {
-            $this->httpPostJson('/cgi/user/batchdelete', ['delList' => $userId])->throw();
+            $this->httpPostJson('/cgi/user/batchdelete', [
+                'delList' => array_map(fn ($uid) => (string) $uid, $userId),
+            ])->throw();
 
             return true;
         }
@@ -146,7 +148,7 @@ class Client extends AbstractClient
     public function setAuth($userId, int $authType = 0, string $passwd = ''): bool
     {
         $parameters = [
-            'userId' => $userId,
+            'userId' => (string) $userId,
             'authType' => $authType,
             'passwd' => md5($passwd),
         ];
@@ -164,7 +166,7 @@ class Client extends AbstractClient
     {
         // 封装上传参数
         $parameters = [
-            'userId' => $userId,
+            'userId' => (string) $userId,
         ];
 
         // 开始上传
