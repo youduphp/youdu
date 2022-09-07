@@ -16,9 +16,8 @@ class Client extends AbstractClient
 {
     /**
      * 获取群列表.
-     * @param int|string $userId
      */
-    public function lists($userId = ''): array
+    public function lists(int|string $userId = ''): array
     {
         $parameters = [];
 
@@ -104,9 +103,8 @@ class Client extends AbstractClient
 
     /**
      * 查询用户是否是群成员.
-     * @param int|string $userId
      */
-    public function isMember(string $groupId, $userId): bool
+    public function isMember(string $groupId, int|string $userId): bool
     {
         $parameters = [
             'id' => $groupId,
