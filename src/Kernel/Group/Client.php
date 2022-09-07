@@ -32,9 +32,9 @@ class Client extends AbstractClient
     /**
      * 创建群.
      */
-    public function create(string $name): int|string
+    public function create(string $name): string
     {
-        return $this->httpPostJson('/cgi/group/create', ['name' => $name])->json('id');
+        return (string) $this->httpPostJson('/cgi/group/create', ['name' => $name])->throw()->json('id');
     }
 
     /**
@@ -72,12 +72,13 @@ class Client extends AbstractClient
 
     /**
      * 添加群成员.
+     * @param int[]|string[] $members
      */
     public function addMember(string $groupId, array $members = []): bool
     {
         $parameters = [
             'id' => $groupId,
-            'userList' => $members,
+            'userList' => array_map(fn ($member) => (string) $member, $members),
         ];
 
         $this->httpPostJson('/cgi/group/addmember', $parameters)->throw();
@@ -87,12 +88,13 @@ class Client extends AbstractClient
 
     /**
      * 删除群成员.
+     * @param int[]|string[] $members
      */
     public function delMember(string $groupId, array $members = []): bool
     {
         $parameters = [
             'id' => $groupId,
-            'userList' => $members,
+            'userList' => array_map(fn ($member) => (string) $member, $members),
         ];
 
         $this->httpPostJson('/cgi/group/delmember', $parameters)->throw();
@@ -108,7 +110,7 @@ class Client extends AbstractClient
     {
         $parameters = [
             'id' => $groupId,
-            'userId' => $userId,
+            'userId' => (string) $userId,
         ];
 
         return $this->httpGet('/cgi/group/ismember', $parameters)->json('belong') ? true : false;
