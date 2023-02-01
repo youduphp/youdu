@@ -1,6 +1,6 @@
 {
     "name": "youduphp/youdu",
-    "description": "The php sdk for youdu.",
+    "description": "The PHP SDK for youdu.",
     "type": "library",
     "keywords": [
         "php",
@@ -37,9 +37,9 @@
         }
     },
     "scripts": {
-        "test": "pest",
-        "cs-fix": "php-cs-fixer fix $1",
-        "analyse": "phpstan analyse --memory-limit 300M -l 0 -c phpstan.neon ./src"
+        "test": "@php vendor/bin/pest",
+        "cs-fix": "@php vendor/bin/php-cs-fixer fix $1",
+        "analyse": "@php vendor/bin/phpstan analyse --memory-limit 300M -l 0 -c phpstan.neon ./src"
     },
     "config": {
         "optimize-autoloader": true,

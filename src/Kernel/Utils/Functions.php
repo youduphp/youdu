@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 /**
- * This file is part of youduphp/youdu.
+ * This file is part of youdu.
  *
  * @link     https://github.com/youduphp/youdu
  * @document https://github.com/youduphp/youdu/blob/main/README.md
@@ -49,7 +49,7 @@ function with($value, callable $callback = null)
  */
 function value($value, ...$args)
 {
-    return $value instanceof Closure ? $value(...$args) : $value;
+    return $value instanceof \Closure ? $value(...$args) : $value;
 }
 
 function array_get(array $array, string $key = null, $default = null)

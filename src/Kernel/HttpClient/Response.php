@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 /**
- * This file is part of youduphp/youdu.
+ * This file is part of youdu.
  *
  * @link     https://github.com/youduphp/youdu
  * @document https://github.com/youduphp/youdu/blob/main/README.md
@@ -10,7 +10,6 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\HttpClient;
 
-use ArrayAccess;
 use Psr\Http\Message\ResponseInterface;
 use YouduPhp\Youdu\Kernel\Exception\ErrorCode;
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
@@ -25,7 +24,7 @@ use function YouduPhp\Youdu\Kernel\Utils\tap;
 /**
  * @mixin \GuzzleHttp\Psr7\Response
  */
-class Response implements ArrayAccess
+class Response implements \ArrayAccess
 {
     use Tappable;
     use Conditionable;

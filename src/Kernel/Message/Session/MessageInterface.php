@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 /**
- * This file is part of youduphp/youdu.
+ * This file is part of youdu.
  *
  * @link     https://github.com/youduphp/youdu
  * @document https://github.com/youduphp/youdu/blob/main/README.md
@@ -10,9 +10,7 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Message\Session;
 
-use JsonSerializable;
-
-interface MessageInterface extends JsonSerializable
+interface MessageInterface extends \JsonSerializable
 {
     public function sender(string $sender): self;
 
