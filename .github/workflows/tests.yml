@@ -42,7 +42,10 @@ jobs:
         run: |
           composer install --dev
 
-      - name: Test
+      - name: Run Analyse
         run: |
           composer analyse
+
+      - name: Run Test
+        run: |
           composer test
