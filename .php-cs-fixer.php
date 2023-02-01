@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @contact  huangdijia@gmail.com
  */
 $header = <<<'EOF'
-This file is part of youduphp/youdu.
+This file is part of youdu.
 
 @link     https://github.com/youduphp/youdu
 @document https://github.com/youduphp/youdu/blob/main/README.md

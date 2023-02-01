@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 /**
- * This file is part of youduphp/youdu.
+ * This file is part of youdu.
  *
  * @link     https://github.com/youduphp/youdu
  * @document https://github.com/youduphp/youdu/blob/main/README.md
@@ -10,7 +10,6 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Utils\Encipher;
 
-use Throwable;
 use YouduPhp\Youdu\Kernel\Exception\ErrorCode;
 
 class SHA1
@@ -32,7 +31,7 @@ class SHA1
             $str = implode($array);
 
             return [ErrorCode::$OK, sha1($str)];
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             return [ErrorCode::$ComputeSignatureError, $e->getMessage()];
         }
     }
