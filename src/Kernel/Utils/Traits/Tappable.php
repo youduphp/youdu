@@ -19,7 +19,7 @@ trait Tappable
     /**
      * Call the given Closure with this instance then return the instance.
      *
-     * @param null|callable $callback
+     * @param callable|null $callback
      * @return $this|HigherOrderTapProxy
      */
     public function tap($callback = null)

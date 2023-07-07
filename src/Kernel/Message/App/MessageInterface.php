@@ -10,7 +10,9 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\Message\App;
 
-interface MessageInterface extends \JsonSerializable
+use JsonSerializable;
+
+interface MessageInterface extends JsonSerializable
 {
     public function toUser(string $toUser): self;
 

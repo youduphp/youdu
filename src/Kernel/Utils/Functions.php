@@ -34,7 +34,7 @@ function tap($value, callable $callback = null)
  * @template TValue
  *
  * @param TValue $value
- * @param  (callable(TValue): TValue)|null  $callback
+ * @param (callable(TValue): TValue)|null $callback
  * @return TValue
  */
 function with($value, callable $callback = null)
@@ -49,7 +49,7 @@ function with($value, callable $callback = null)
  */
 function value($value, ...$args)
 {
-    return $value instanceof \Closure ? $value(...$args) : $value;
+    return $value instanceof Closure ? $value(...$args) : $value;
 }
 
 function array_get(array $array, string $key = null, $default = null)
