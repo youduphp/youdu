@@ -10,10 +10,9 @@ declare(strict_types=1);
  */
 use GuzzleHttp\ClientInterface;
 use YouduPhp\Youdu\Application;
-use Mockery as m;
 
 beforeEach(function () {
-    $client = m::mock(ClientInterface::class);
+    $client = mock(ClientInterface::class);
     $config = makeConfig();
     $this->application = new Application($config, $client);
 });
