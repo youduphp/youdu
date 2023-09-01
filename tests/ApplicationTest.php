@@ -8,11 +8,11 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
-use GuzzleHttp\ClientInterface;
 use YouduPhp\Youdu\Application;
+use YouduPhp\Youdu\Kernel\HttpClient\ClientFactoryInterface;
 
 beforeEach(function () {
-    $client = mock(ClientInterface::class);
+    $client = mock(ClientFactoryInterface::class);
     $config = makeConfig();
     $this->application = new Application($config, $client);
 });

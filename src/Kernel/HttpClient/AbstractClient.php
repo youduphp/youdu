@@ -10,7 +10,6 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu\Kernel\HttpClient;
 
-use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\SimpleCache\CacheInterface;
 use YouduPhp\Youdu\Config;
@@ -24,7 +23,7 @@ abstract class AbstractClient
 {
     public function __construct(
         protected Config $config,
-        protected ClientInterface $client,
+        protected ClientFactoryInterface $clientFactory,
         protected PackerInterface $packer,
         protected ?CacheInterface $cache = null
     ) {
@@ -33,7 +32,7 @@ abstract class AbstractClient
     protected function httpGet(string $uri, array $query = []): Response
     {
         return $this->buildResponse(
-            $this->client->request('GET', $uri, [
+            $this->clientFactory->create()->request('GET', $uri, [
                 'query' => $this->preformatQuery($query),
             ])
         );
@@ -42,7 +41,7 @@ abstract class AbstractClient
     protected function httpPost(string $uri, array $data = []): Response
     {
         return $this->buildResponse(
-            $this->client->request('POST', $uri, [
+            $this->clientFactory->create()->request('POST', $uri, [
                 'form_params' => $this->preformatParams($data),
                 'query' => $this->preformatQuery(),
             ])
@@ -52,7 +51,7 @@ abstract class AbstractClient
     protected function httpPostJson(string $uri, array $data = []): Response
     {
         return $this->buildResponse(
-            $this->client->request('POST', $uri, [
+            $this->clientFactory->create()->request('POST', $uri, [
                 'json' => $this->preformatParams($data),
                 'query' => $this->preformatQuery(),
             ])
@@ -66,7 +65,7 @@ abstract class AbstractClient
             $tmpFile = $this->createTmpFile($file);
 
             return $this->buildResponse(
-                $this->client->request('POST', $uri, [
+                $this->clientFactory->create()->request('POST', $uri, [
                     'multipart' => $this->preformatUploadFileParams($tmpFile, $data),
                     'query' => $this->preformatQuery(),
                 ])
@@ -147,7 +146,7 @@ abstract class AbstractClient
         ];
 
         $response = $this->buildResponse(
-            $this->client->request('POST', '/cgi/gettoken', ['json' => $parameters])
+            $this->clientFactory->create()->request('POST', '/cgi/gettoken', ['json' => $parameters])
         )->throw();
         $ttl = (int) ($response->json('expireIn', 7200) - 60);
 
