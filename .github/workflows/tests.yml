@@ -43,13 +43,10 @@ jobs:
         run: php -m
 
       - name: Install Dependencies
-        run: |
-          composer install --dev
+        run: composer install --dev
 
       - name: Run Analyse
-        run: |
-          composer analyse
+        run: composer analyse src
 
       - name: Run Test
-        run: |
-          composer test
+        run: composer test

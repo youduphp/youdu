@@ -10,10 +10,10 @@ declare(strict_types=1);
  */
 namespace YouduPhp\Youdu;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
 use Psr\SimpleCache\CacheInterface;
 use YouduPhp\Youdu\Kernel\Exception\InvalidArgumentException;
+use YouduPhp\Youdu\Kernel\HttpClient\ClientFactory;
+use YouduPhp\Youdu\Kernel\HttpClient\ClientFactoryInterface;
 use YouduPhp\Youdu\Kernel\Utils\Packer\Packer;
 use YouduPhp\Youdu\Kernel\Utils\Packer\PackerInterface;
 
@@ -31,12 +31,16 @@ class Application
 
     private PackerInterface $packer;
 
-    public function __construct(protected Config $config, private ?ClientInterface $client = null, protected ?CacheInterface $cache = null)
+    public function __construct(protected Config $config, private ?ClientFactoryInterface $clientFactory = null, protected ?CacheInterface $cache = null)
     {
-        $this->client = $client ?? new Client([
-            'base_uri' => $config->getApi(),
-            'timeout' => $config->getTimeout(),
-        ]);
+        if (! $this->clientFactory) {
+            $clientFactory = new ClientFactory();
+            $clientFactory->setOptions([
+                'base_uri' => $config->getApi(),
+                'timeout' => $config->getTimeout(),
+            ]);
+            $this->clientFactory = $clientFactory;
+        }
         $this->packer = new Packer($config);
     }
 
@@ -54,7 +58,7 @@ class Application
 
         return $this->container[$name] = new $class(
             $this->config,
-            $this->client,
+            $this->clientFactory,
             $this->packer,
             $this->cache
         );
