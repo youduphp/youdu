@@ -84,9 +84,14 @@ class Client extends AbstractClient
      * 获取部门ID.
      *
      * @param string $alias 部门alias。携带时查询该alias对应的部门id。不带alias参数时查询全部映射关系。
+     * @return array|int 带alias { "id":5 } | 不带alias {"aliasList":[{ "id":1, "alias":"we3pj6cv" }]}
      */
-    public function getId(string $alias = ''): array
+    public function getId(string $alias = ''): array|int
     {
-        return $this->httpGet('/cgi/dept/list', ['alias' => $alias])->json('aliasList', []);
+        if ($alias) {
+            return $this->httpGet('/cgi/dept/getid', ['alias' => $alias])->json('id', 0);
+        }
+
+        return $this->httpGet('/cgi/dept/getid')->json('aliasList', []);
     }
 }
