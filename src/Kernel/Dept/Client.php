@@ -89,7 +89,7 @@ class Client extends AbstractClient
     public function getId(string $alias = ''): array|int
     {
         if ($alias) {
-            return $this->httpGet('/cgi/dept/getid', ['alias' => $alias])->json('id', 0);
+            return (int) $this->httpGet('/cgi/dept/getid', ['alias' => $alias])->json('id', 0);
         }
 
         return $this->httpGet('/cgi/dept/getid')->json('aliasList', []);
