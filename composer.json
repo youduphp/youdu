@@ -36,11 +36,6 @@
             "YouduPhp\\Youdu\\Tests\\": "tests/"
         }
     },
-    "extra": {
-        "branch-alias": {
-            "dev-main": "1.1.x-dev"
-        }
-    },
     "scripts": {
         "test": "@php vendor/bin/pest",
         "cs-fix": "@php vendor/bin/php-cs-fixer fix $1",
