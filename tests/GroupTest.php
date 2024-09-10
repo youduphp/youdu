@@ -16,5 +16,5 @@ beforeEach(function () {
 });
 
 it('assert get group info', function () {
-    expect($this->group)->toBeInstanceOf(\YouduPhp\Youdu\Kernel\Group\Client::class);
+    expect($this->group)->toBeInstanceOf(YouduPhp\Youdu\Kernel\Group\Client::class);
 });

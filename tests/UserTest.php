@@ -16,5 +16,5 @@ beforeEach(function () {
 });
 
 it('assert get user info', function () {
-    expect($this->user)->toBeInstanceOf(\YouduPhp\Youdu\Kernel\User\Client::class);
+    expect($this->user)->toBeInstanceOf(YouduPhp\Youdu\Kernel\User\Client::class);
 });

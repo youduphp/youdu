@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
+
 namespace YouduPhp\Youdu\Kernel\Message;
 
 use YouduPhp\Youdu\Kernel\Exception\LogicException;
@@ -103,7 +104,7 @@ class Client extends AbstractClient
     /**
      * 应用弹窗.
      */
-    public function popWindow(string $toUser = '', string $toDept = '', PopWindow $message = null): bool
+    public function popWindow(string $toUser = '', string $toDept = '', ?PopWindow $message = null): bool
     {
         $message->when($toUser, fn ($message) => $message->toUser($toUser))
             ->when($toDept, fn ($message) => $message->toDept($toDept));

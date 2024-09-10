@@ -16,5 +16,5 @@ beforeEach(function () {
 });
 
 it('assert get session info', function () {
-    expect($this->session)->toBeInstanceOf(\YouduPhp\Youdu\Kernel\Session\Client::class);
+    expect($this->session)->toBeInstanceOf(YouduPhp\Youdu\Kernel\Session\Client::class);
 });

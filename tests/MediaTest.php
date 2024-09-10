@@ -16,6 +16,6 @@ beforeEach(function () {
 });
 
 it('assert get media info', function () {
-    expect($this->media)->toBeInstanceOf(\YouduPhp\Youdu\Kernel\Media\Client::class);
+    expect($this->media)->toBeInstanceOf(YouduPhp\Youdu\Kernel\Media\Client::class);
     // $mediaId = '43ceeb1bd9fed1fde4983e5b3fb91aba-4';
 });

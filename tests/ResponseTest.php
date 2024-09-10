@@ -21,7 +21,7 @@ it('assert response', function () {
         'errmsg' => '',
         'encrypt' => $this->packer->pack(json_encode(['foo' => 'bar', 'bar' => ['baz' => 'qux']])),
     ];
-    $psrResponse = new \GuzzleHttp\Psr7\Response(200, [], json_encode($body));
+    $psrResponse = new GuzzleHttp\Psr7\Response(200, [], json_encode($body));
 
     $response = new Response($psrResponse, $this->packer);
 

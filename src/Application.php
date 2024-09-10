@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
+
 namespace YouduPhp\Youdu;
 
 use Psr\SimpleCache\CacheInterface;
@@ -50,7 +51,7 @@ class Application
             return $this->container[$name];
         }
 
-        $class = __NAMESPACE__ . '\\Kernel\\' . ucfirst($name) . '\\Client';
+        $class = __NAMESPACE__ . '\Kernel\\' . ucfirst($name) . '\Client';
 
         if (! class_exists($class)) {
             throw new InvalidArgumentException(sprintf('Class "%s" not found', $class));

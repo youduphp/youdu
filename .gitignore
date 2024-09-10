@@ -3,3 +3,4 @@ composer.lock
 *.cache
 *.log
 phpunit.xml
+.bashrc

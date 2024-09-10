@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @document https://github.com/youduphp/youdu/blob/main/README.md
  * @contact  huangdijia@gmail.com
  */
+
 namespace YouduPhp\Youdu\Kernel\Utils;
 
 use Closure;
@@ -17,7 +18,7 @@ use Closure;
  *
  * @param mixed $value
  */
-function tap($value, callable $callback = null)
+function tap($value, ?callable $callback = null)
 {
     if (is_null($callback)) {
         return new HigherOrderTapProxy($value);
@@ -37,7 +38,7 @@ function tap($value, callable $callback = null)
  * @param (callable(TValue): TValue)|null $callback
  * @return TValue
  */
-function with($value, callable $callback = null)
+function with($value, ?callable $callback = null)
 {
     return is_null($callback) ? $value : $callback($value);
 }
@@ -52,7 +53,7 @@ function value($value, ...$args)
     return $value instanceof Closure ? $value(...$args) : $value;
 }
 
-function array_get(array $array, string $key = null, $default = null)
+function array_get(array $array, ?string $key = null, $default = null)
 {
     if (is_null($key)) {
         return $array;

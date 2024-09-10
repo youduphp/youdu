@@ -18,10 +18,10 @@ beforeEach(function () {
 });
 
 it('assert application getter', function () {
-    expect($this->application->dept())->toBeInstanceOf(\YouduPhp\Youdu\Kernel\Dept\Client::class);
-    expect($this->application->group())->toBeInstanceOf(\YouduPhp\Youdu\Kernel\Group\Client::class);
-    expect($this->application->media())->toBeInstanceOf(\YouduPhp\Youdu\Kernel\Media\Client::class);
-    expect($this->application->message())->toBeInstanceOf(\YouduPhp\Youdu\Kernel\Message\Client::class);
-    expect($this->application->session())->toBeInstanceOf(\YouduPhp\Youdu\Kernel\Session\Client::class);
-    expect($this->application->user())->toBeInstanceOf(\YouduPhp\Youdu\Kernel\User\Client::class);
+    expect($this->application->dept())->toBeInstanceOf(YouduPhp\Youdu\Kernel\Dept\Client::class);
+    expect($this->application->group())->toBeInstanceOf(YouduPhp\Youdu\Kernel\Group\Client::class);
+    expect($this->application->media())->toBeInstanceOf(YouduPhp\Youdu\Kernel\Media\Client::class);
+    expect($this->application->message())->toBeInstanceOf(YouduPhp\Youdu\Kernel\Message\Client::class);
+    expect($this->application->session())->toBeInstanceOf(YouduPhp\Youdu\Kernel\Session\Client::class);
+    expect($this->application->user())->toBeInstanceOf(YouduPhp\Youdu\Kernel\User\Client::class);
 });

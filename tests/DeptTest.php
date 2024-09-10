@@ -16,5 +16,5 @@ beforeEach(function () {
 });
 
 it('asserts dept', function () {
-    expect($this->dept)->toBeInstanceOf(\YouduPhp\Youdu\Kernel\Dept\Client::class);
+    expect($this->dept)->toBeInstanceOf(YouduPhp\Youdu\Kernel\Dept\Client::class);
 });
