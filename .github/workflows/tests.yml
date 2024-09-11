@@ -43,7 +43,13 @@ jobs:
         run: php -m
 
       - name: Install Dependencies
-        run: composer install
+        run: |
+          if [ ${{ matrix.php }} = "8.4" ]; then
+            composer install --ignore-platform-reqs
+          else
+            composer install
+          fi
+
 
       - name: Run Analyse
         run: composer analyse src
